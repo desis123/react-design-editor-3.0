@@ -13,6 +13,7 @@ export default class State implements IState {
   public paramMenuRequest = null
   public design = null
   public isFreeDrawing = false
+  public template = null
   public setFrame(o: any) {
     this.frame = o
   }
@@ -30,6 +31,9 @@ export default class State implements IState {
   }
   public setDesign(o: any) {
     this.design = o
+  }
+  public setTemplate(o: any) {
+    this.template = o
   }
   public setIsFreeDrawing(o: boolean) {
     this.isFreeDrawing = o

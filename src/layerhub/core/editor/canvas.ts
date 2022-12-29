@@ -1,5 +1,6 @@
+import { IConfig } from "@layerhub-pro/types"
 import { fabric } from "fabric"
-import { FabricCanvas, IConfig } from "../common/interfaces"
+import { FabricCanvas } from "../common/interfaces"
 import type { Editor } from "./editor"
 
 interface CanvasOptions {
@@ -33,8 +34,8 @@ class Canvas {
       backgroundColor: this.config.canvas.color,
       preserveObjectStacking: true,
       fireRightClick: true,
-      height: this.config.canvas.size.height,
-      width: this.config.canvas.size.width,
+      height: this.config.canvas.size!.height,
+      width: this.config.canvas.size!.width,
     })
 
     this.canvas = canvas as FabricCanvas

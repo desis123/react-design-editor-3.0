@@ -494,6 +494,9 @@ export const vectors = [
   "https://ik.imagekit.io/scenify/006-sleep.svg",
   "https://ik.imagekit.io/scenify/007-hug.svg",
   "https://ik.imagekit.io/scenify/008-sleep.svg",
+  "https://ik.imagekit.io/sndiwj1nbpg/dev/e/1/images/bkiejUw7-undraw_dream_world_re_x2yl.svg",
+  "https://ik.imagekit.io/sndiwj1nbpg/dev/images/o_1f0gqim32ld015nl1kd1q0p1fuq10.svg?tr=orig-true",
+  "https://ik.imagekit.io/sndiwj1nbpg/dev/images/o_1f0gqesollo1iv18g923r1f3d10.svg?tr=orig-true",
 ]
 
 export const images = [

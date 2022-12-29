@@ -241,7 +241,6 @@ class ObjectsExporter {
   public path(item: ILayer, options: Required<ILayer>, inGroup: boolean): IStaticPath {
     const baseOptions = this.getBaseOptions(item, options, inGroup)
     const { path, fill, metadata } = item as IStaticPath
-    console.log({ fill })
     const object = {
       ...baseOptions,
       path,

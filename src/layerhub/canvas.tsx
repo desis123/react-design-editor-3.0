@@ -18,8 +18,6 @@ export const Canvas = (props: Props) => {
       id: "layerhub_io_canvas",
       config: {
         ...props.config,
-        margin: 240,
-        outsideVisible: false,
         // @ts-ignore
         canvas: {
           size: {

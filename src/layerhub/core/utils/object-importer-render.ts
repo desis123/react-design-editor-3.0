@@ -7,7 +7,6 @@ import {
   IBackgroundImage,
   IGroup,
   ILayer,
-  IPlaceholder,
   IStaticImage,
   IStaticPath,
   IStaticText,

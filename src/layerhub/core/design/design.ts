@@ -1,4 +1,4 @@
-import { IConfig, IDesign, IScene } from "@layerhub-pro/types"
+import { IConfig, IDesign } from "@layerhub-pro/types"
 import { FabricCanvas, IState } from "../common/interfaces"
 import { Editor } from "../editor/editor"
 import Scene from "./scene"
@@ -15,11 +15,11 @@ class Design {
   public activeScene: Scene
   private scenes: Scene[]
   private canvas: FabricCanvas
-  private design: IDesign
+  public design: IDesign
   private config: IConfig
   private editor: Editor
   private state: IState
-
+  public template: IDesign
   constructor(options: DesignOptions) {
     this.canvas = options.canvas
     this.config = options.config
@@ -28,9 +28,16 @@ class Design {
     this.setDesign(options.design)
   }
 
+  public updateDesign(props: Record<string, string | number | any>) {
+    this.design = Object.assign({}, this.design, props)
+    this.state.setTemplate(this.design)
+  }
+
   public async setDesign(design: IDesign) {
     this.design = design
+    this.template = design
     await this.loadScenes()
+    this.state.setTemplate(design)
   }
 
   public async loadScenes() {

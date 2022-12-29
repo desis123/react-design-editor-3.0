@@ -1,6 +1,6 @@
 import fabric from "fabric/fabric-impl"
 import { Editor } from "../editor/editor"
-import { ILayer } from "@layerhub-pro/types"
+import { IDesign, ILayer } from "@layerhub-pro/types"
 import type Design from "../design/design"
 
 export type Direction = "top" | "left"
@@ -86,6 +86,7 @@ export interface IState {
   design: Design | null
   paramMenuRequest: any
   isFreeDrawing: boolean
+  template: IDesign | null
   setFrame: (o: any) => void
   setBackground: (o: any) => void
   setActiveObject: (o: any) => void
@@ -98,4 +99,5 @@ export interface IState {
   setScenes: (o: any) => void
   setParamMenuRequest: (o: any) => void
   setIsFreeDrawing: (o: boolean) => void
+  setTemplate: (o: any) => void
 }

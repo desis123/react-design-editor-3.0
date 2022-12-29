@@ -21,6 +21,8 @@ class Config implements IConfig {
       // @ts-ignore
       this[key] = config[key]
     })
+    // @ts-ignore
+    this.canvas = Object.assign({}, defaultConfig.canvas, options?.canvas)
   }
 }
 export default Config
