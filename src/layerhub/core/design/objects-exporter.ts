@@ -72,10 +72,8 @@ class ObjectsExporter {
       case LayerType.OVAL:
         object = this.ellipse(item, options, inGroup)
         break
-
-      default:
-        object = this.background(item, options, inGroup)
     }
+    // @ts-ignore
     return object
   }
 

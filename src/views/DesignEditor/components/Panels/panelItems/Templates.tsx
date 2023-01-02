@@ -21,11 +21,9 @@ export default function () {
   const editorType = useEditorType()
   const activeScene = useActiveScene()
 
-  const loadGraphicTemplate = async (payload: IDesign): Promise<{ scenes: IScene[]; design: IDesign }> => {
-    const scenes: IScene[] = []
-    const { scenes: scns, ...design } = payload
-
-    for (const scn of scns) {
+  const loadGraphicTemplate = async (payload: IDesign): Promise<void> => {
+    const { scenes } = payload
+    for (const scn of scenes) {
       const scene: IScene = {
         name: scn.name,
         frame: payload.frame,
@@ -35,8 +33,6 @@ export default function () {
       }
       await loadTemplateFonts(scene)
     }
-
-    return { scenes, design: design as IDesign }
   }
 
   const loadDesignById = React.useCallback(
