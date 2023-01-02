@@ -19,10 +19,10 @@ export function angleToPoint(angle: number, sx: number, sy: number) {
   return { y: sy, x: sx - (pp - c) }
 }
 
-const setObjectGradient = (object: fabric.Object, angle: number, colors: string[]) => {
+const setObjectGradient = (object: fabric.Object, gradientOptions: { angle: number; colors: string[] }) => {
   let odx = object.width! >> 1
   let ody = object.height! >> 1
-  let startPoint = angleToPoint(angle, object.width!, object.height!)
+  let startPoint = angleToPoint(gradientOptions.angle, object.width!, object.height!)
   let endPoint = {
     x: object.width! - startPoint.x,
     y: object.height! - startPoint.y,
@@ -39,8 +39,8 @@ const setObjectGradient = (object: fabric.Object, angle: number, colors: string[
         y2: endPoint.y - ody,
       },
       colorStops: [
-        { offset: 0, color: colors[0] },
-        { offset: 1, color: colors[1] },
+        { offset: 0, color: gradientOptions.colors[0] },
+        { offset: 1, color: gradientOptions.colors[1] },
       ],
     })
   )

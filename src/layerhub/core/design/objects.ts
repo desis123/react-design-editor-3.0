@@ -291,7 +291,7 @@ class Objects {
 
       canvas.requestRenderAll()
       this.scale("fill", backgroundImage.id)
-      backgroundImage.moveTo(2)
+      backgroundImage.moveTo(3)
       if (nextImage) {
         this.sendToBack(nextImage.id)
       }
@@ -327,10 +327,10 @@ class Objects {
     if (activeObject instanceof fabric.Group) {
       // @ts-ignore
       activeObject._objects.forEach((object) => {
-        setObjectGradient(object, angle, colors)
+        setObjectGradient(object, { angle, colors })
       })
     } else if (activeObject) {
-      setObjectGradient(activeObject, angle, colors)
+      setObjectGradient(activeObject, { angle, colors })
     }
     canvas.requestRenderAll()
     this.scene.history.save()

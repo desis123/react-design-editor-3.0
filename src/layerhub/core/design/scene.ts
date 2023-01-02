@@ -13,6 +13,7 @@ import _ from "lodash"
 import setObjectGradient from "../utils/fabric"
 import { getFitRatio } from "../utils/zoom"
 import { base64ImageToFile } from "../utils/parser"
+import Background from "./background"
 
 interface SceneOptions {
   scene: IScene
@@ -36,21 +37,21 @@ class Scene {
   public state: IState
   public history: History
   public cropObject: any
+  public background: Background
   constructor(options: SceneOptions) {
     this.id = nanoid()
     this.layers = []
+
     this.config = options.config
     this.editor = options.editor
-
     this.canvas = options.canvas
     this.state = options.state
-
-    // this.setScene(options.scene)
     this.scene = options.scene
 
-    this.history = new History(this)
     this.renderer = new Renderer()
+    this.history = new History(this)
     this.objects = new ObjectsManager(this)
+    this.background = new Background(this)
   }
 
   public async setScene(scene: IScene) {
@@ -307,31 +308,31 @@ class Scene {
     return elements
   }
 
-  get background() {
-    return this.canvas
-      .getObjects()
-      .find((object) => object.type === LayerType.BACKGROUND) as Required<fabric.Background>
-  }
+  // get background() {
+  //   return this.canvas
+  //     .getObjects()
+  //     .find((object) => object.type === LayerType.BACKGROUND) as Required<fabric.Background>
+  // }
 
-  public updateBackground = (props: Record<string, any>) => {
-    const background = this.background
-    if (background) {
-      background.set(props)
-      this.state.setBackground({ ...background.toJSON(), ...props })
-      this.canvas.requestRenderAll()
-      this.history.save()
-    }
-  }
+  // public updateBackground = (props: Record<string, any>) => {
+  //   const background = this.background
+  //   if (background) {
+  //     background.set(props)
+  //     this.state.setBackground({ ...background.toJSON(), ...props })
+  //     this.canvas.requestRenderAll()
+  //     this.history.save()
+  //   }
+  // }
 
-  public setBackgroundGradient = ({ angle, colors }: GradientOptions) => {
-    const background = this.background
-    if (background) {
-      setObjectGradient(background, angle, colors)
-      this.state.setBackground({ ...background.toJSON(), gradient: { angle, colors } })
-      this.canvas.requestRenderAll()
-      this.history.save()
-    }
-  }
+  // public setBackgroundGradient = ({ angle, colors }: GradientOptions) => {
+  //   const background = this.background
+  //   if (background) {
+  //     setObjectGradient(background, { angle, colors })
+  //     this.state.setBackground({ ...background.toJSON(), gradient: { angle, colors } })
+  //     this.canvas.requestRenderAll()
+  //     this.history.save()
+  //   }
+  // }
   public getFitRatio = () => {
     return getFitRatio(this.frame, this.canvas, this.config)
   }

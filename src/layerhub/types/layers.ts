@@ -31,6 +31,7 @@ export enum LayerType {
   STATIC_TEXT = "StaticText",
   DYNAMIC_TEXT = "DynamicText",
   BACKGROUND = "Background",
+  BACKGROUND_IMAGE = "BackgroundImage",
   FRAME = "Frame",
   GROUP = "Group",
   ACTIVE_SELECTION = "activeSelection",
@@ -71,6 +72,7 @@ interface LayerBaseOptions {
   skewX?: number
   skewY?: number
   stroke?: string
+  fill?: any
   rx?: number
   ry?: number
   strokeWidth?: number
@@ -90,6 +92,7 @@ interface LayerBaseOptions {
   duration?: number
   display?: TimeRange
   cut?: TimeRange
+  gradientOptions?: any
 }
 
 interface Animation {
@@ -129,7 +132,6 @@ export interface IGroup extends LayerBaseOptions {
 
 export interface IStaticPath extends LayerBaseOptions {
   path: number[][]
-  fill: string
 }
 
 export interface IStaticVector extends LayerBaseOptions {
