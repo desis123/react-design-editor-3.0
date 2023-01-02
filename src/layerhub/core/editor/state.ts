@@ -14,6 +14,7 @@ export default class State implements IState {
   public design = null
   public isFreeDrawing = false
   public template = null
+  public isCropping: false
   public setFrame(o: any) {
     this.frame = o
   }
@@ -34,6 +35,9 @@ export default class State implements IState {
   }
   public setTemplate(o: any) {
     this.template = o
+  }
+  public setIsCropping(o: any) {
+    this.isCropping = o
   }
   public setIsFreeDrawing(o: boolean) {
     this.isFreeDrawing = o

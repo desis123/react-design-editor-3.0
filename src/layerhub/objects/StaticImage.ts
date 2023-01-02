@@ -71,6 +71,7 @@ export class StaticImageObject extends fabric.Image {
   async cropInit() {
     this._isCropping = true
     const canvas = this.canvas!
+    canvas!.fire("crop:started", this)
     canvas._isCropping = true
     const cropped = this
     const cropInfo = cropped._cropInfo
@@ -241,6 +242,8 @@ export class StaticImageObject extends fabric.Image {
 
   async cropApply() {
     const canvas = this.canvas!
+    canvas!.fire("crop:finished", this)
+
     if (!this._isCropping) return
     canvas.off("mouse:up", this.onMouseUp.bind(this))
     this._isCropping = false

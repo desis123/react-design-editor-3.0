@@ -35,7 +35,7 @@ class Scene {
   public name: string
   public state: IState
   public history: History
-
+  public cropObject: any
   constructor(options: SceneOptions) {
     this.id = nanoid()
     this.layers = []

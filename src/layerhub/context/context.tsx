@@ -12,13 +12,16 @@ const Context = React.createContext<IState>({
   scenes: [],
   editor: null,
   design: null,
+  template: null,
   paramMenuRequest: null,
   isFreeDrawing: false,
+  isCropping: false,
   setActiveObject: () => {},
   setActiveScene: () => {},
   setContextMenuRequest: () => {},
   setFrame: () => {},
   setBackground: () => {},
+  setTemplate: () => {},
   setObjects: () => {},
   setScenes: () => {},
   setZoomRatio: () => {},
@@ -26,15 +29,18 @@ const Context = React.createContext<IState>({
   setDesign: () => {},
   setParamMenuRequest: () => {},
   setIsFreeDrawing: () => {},
+  setIsCropping: () => {},
 })
 
 const Provider = ({ children }: { children: React.ReactNode }) => {
   const [zoomRatio, setZoomRatio] = React.useState(1)
   const [activeObject, setActiveObject] = React.useState(null)
   const [isFreeDrawing, setIsFreeDrawing] = React.useState(false)
+  const [isCropping, setIsCropping] = React.useState(false)
   const [activeScene, setActiveScene] = React.useState<Scene | null>(null)
   const [frame, setFrame] = React.useState(null)
   const [background, setBackground] = React.useState(null)
+  const [template, setTemplate] = React.useState(null)
   const [editor, setEditor] = React.useState(null)
   const [design, setDesign] = React.useState(null)
   const [contextMenuRequest, setContextMenuRequest] = React.useState(null)
@@ -69,6 +75,10 @@ const Provider = ({ children }: { children: React.ReactNode }) => {
         setDesign,
         isFreeDrawing,
         setIsFreeDrawing,
+        template,
+        setTemplate,
+        isCropping,
+        setIsCropping,
       }}
     >
       {children}

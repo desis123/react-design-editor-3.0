@@ -87,7 +87,9 @@ export interface IState {
   paramMenuRequest: any
   isFreeDrawing: boolean
   template: IDesign | null
+  isCropping: boolean
   setFrame: (o: any) => void
+  setIsCropping: (o: any) => void
   setBackground: (o: any) => void
   setActiveObject: (o: any) => void
   setActiveScene: (o: any) => void

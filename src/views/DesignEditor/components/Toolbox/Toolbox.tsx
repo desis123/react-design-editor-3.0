@@ -1,5 +1,5 @@
 import React from "react"
-import { useActiveObject, useEditor } from "@layerhub-pro/react"
+import { useActiveObject, useEditor, useIsCropping } from "@layerhub-pro/react"
 import getSelectionType from "~/utils/get-selection-type"
 import { styled } from "baseui"
 import Items from "./Items"
@@ -20,32 +20,28 @@ const Container = styled("div", (props) => ({
 
 const Toolbox = () => {
   const [state, setState] = React.useState<ToolboxState>({ toolbox: "Text" })
+  const isCropping = useIsCropping()
   const { setActiveSubMenu } = useAppContext()
   const activeObject = useActiveObject() as ILayer
   const editor = useEditor()
 
   React.useEffect(() => {
-    if (activeObject) {
-      // console.l
-      // console.log(activeObject.type, activeObject.metadata)
-      // const controls = activeObject.metadata!.controls as any
-      // Object.keys(controls).forEach((control) => {
-      //   // @ts-ignore
-      //   activeObject.controls[control].render = () => true
-      // })
-    }
     const selectionType = getSelectionType(activeObject)
-    if (selectionType) {
-      if (selectionType.length > 1) {
-        setState({ toolbox: "Multiple" })
-      } else {
-        setState({ toolbox: selectionType[0] })
-      }
+    if (isCropping) {
+      setState({ toolbox: "Crop" })
     } else {
-      setState({ toolbox: DEFAULT_TOOLBOX })
-      setActiveSubMenu("")
+      if (selectionType) {
+        if (selectionType.length > 1) {
+          setState({ toolbox: "Multiple" })
+        } else {
+          setState({ toolbox: selectionType[0] })
+        }
+      } else {
+        setState({ toolbox: DEFAULT_TOOLBOX })
+        setActiveSubMenu("")
+      }
     }
-  }, [activeObject])
+  }, [activeObject, isCropping])
 
   React.useEffect(() => {
     let watcher = async () => {

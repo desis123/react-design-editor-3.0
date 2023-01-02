@@ -7,6 +7,7 @@ import Multiple from "./Multiple"
 import Canvas from "./Canvas"
 import Frame from "./Frame"
 import Video from "./Video"
+import Crop from "./Crop"
 
 export default {
   StaticText: Text,
@@ -14,6 +15,7 @@ export default {
   StaticImage: Image,
   StaticVector: Vector,
   StaticVideo: Video,
+  Crop,
   Locked,
   Multiple,
   Canvas,

@@ -29,15 +29,16 @@ class Objects {
     }
 
     this.addObject(object)
+    this.scaleOnAdd(object)
+
+    this.scene.canvas.requestRenderAll()
     this.scene.canvas.setActiveObject(object)
     this.scene.state.setActiveObject(object)
-
-    this.updateContextObjects()
     this.scene.history.save()
+    this.updateContextObjects()
   }
 
   private async addObject(object: any) {
-    const frame = this.scene.frame
     const canvas = this.scene.canvas
     const isBackgroundImage = object.type === LayerType.BACKGROUND_IMAGE
     let currentBackgrounImage: any
@@ -61,14 +62,41 @@ class Objects {
       }
     } else {
       canvas.add(object)
-      if (object.width! > frame.width!) {
-        this.scale("fit", object.id)
-      } else {
-        object.center()
-      }
     }
   }
 
+  public scaleOnAdd = (object: fabric.Object) => {
+    const frame = this.scene.frame
+    const zoomRatio = this.scene.canvas.getZoom()
+
+    if (object.type === "StaticImage" || object.type === "StaticVector") {
+      const isFramePortrait = frame.height! > frame.width!
+      const isObjectPortrait = object.height! > object.width!
+      const refSize = Math.min(frame.height!, frame.width!)
+      const refWidth = zoomRatio * refSize * 0.5
+      if (isFramePortrait) {
+        if (isObjectPortrait) {
+          object.scaleToWidth(refWidth)
+        } else {
+          object.scaleToHeight(refWidth)
+        }
+      } else {
+        if (isObjectPortrait) {
+          object.scaleToHeight(refWidth)
+        } else {
+          object.scaleToWidth(refWidth)
+        }
+      }
+    }
+    object.center()
+  }
+
+  public applyCrop = () => {
+    const cropObject = this.scene.cropObject
+    if (cropObject) {
+      cropObject.cropApply()
+    }
+  }
   /**
    *
    * @param options object properties to be updated

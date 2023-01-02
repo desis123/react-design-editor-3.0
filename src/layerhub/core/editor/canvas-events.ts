@@ -42,6 +42,8 @@ class CanvasEvents {
       "mouse:wheel": this.onMouseWheel,
       "object:modified": this.objectModified,
       "background:selected": this.onBackgroundSelected,
+      "crop:started": this.onCropStarted,
+      "crop:finished": this.onCropFinished,
     })
 
     this.canvas.wrapperEl.addEventListener("keydown", this.onKeyDown.bind(this), false)
@@ -57,9 +59,20 @@ class CanvasEvents {
       "mouse:wheel": this.onMouseWheel,
       "object:modified": this.objectModified,
       "background:selected": this.onBackgroundSelected,
+      "crop:started": this.onCropStarted,
+      "crop:finished": this.onCropFinished,
     })
 
     this.canvas.wrapperEl.removeEventListener("keydown", this.onKeyDown.bind(this))
+  }
+
+  private onCropStarted = (object: fabric.Object) => {
+    this.editor.design.activeScene.cropObject = object
+    this.editor.state.setIsCropping(true)
+  }
+
+  private onCropFinished = (object: fabric.Object) => {
+    this.editor.state.setIsCropping(false)
   }
 
   private onKeyDown(event: KeyboardEvent) {
