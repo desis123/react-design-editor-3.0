@@ -77,11 +77,11 @@ export default function () {
       }
     }
     if (editor) {
-      editor.on("history:changed", watcher)
+      editor.on("history:updated", watcher)
     }
     return () => {
       if (editor) {
-        editor.off("history:changed", watcher)
+        editor.off("history:updated", watcher)
       }
     }
   }, [editor, activeObject])
@@ -225,12 +225,20 @@ export default function () {
             fontWeight: 500,
             fontSize: "14px",
             gap: "0.5rem",
+            display: "flex",
+            alignItems: "center",
           }}
-          height={"24px"}
-          display={"flex"}
-          alignItems={"center"}
         >
-          <Block>{state.family}</Block>
+          <Block
+            $style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              width: "100px",
+            }}
+          >
+            {state.family}
+          </Block>
           <Block display={"flex"}>
             <ChevronDown size={22} />
           </Block>

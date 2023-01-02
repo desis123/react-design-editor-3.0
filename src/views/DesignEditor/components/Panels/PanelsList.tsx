@@ -13,6 +13,7 @@ const Container = styled("div", (props) => ({
   width: "80px",
   backgroundColor: props.$theme.colors.primary100,
   display: "flex",
+  flex: "none",
 }))
 
 function PanelsList() {
