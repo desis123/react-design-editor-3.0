@@ -124,8 +124,10 @@ class Renderer {
     const { frame } = template
     this.setDimensions(staticCanvas, frame)
     const objectImporter = new ObjectImporter()
+    // console.log(template.layers)
+    //
+    const updatedLayers = template.layers.filter((layer) => layer && layer.type !== LayerType.BACKGROUND_CONTAINER)
 
-    const updatedLayers = template.layers.filter((layer) => layer.type !== LayerType.BACKGROUND_CONTAINER)
     for (const layer of updatedLayers) {
       const element = await objectImporter.import(layer, params)
       if (element) {

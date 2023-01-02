@@ -7,6 +7,7 @@ import { throttle } from "lodash"
 import { useActiveScene } from "@layerhub-pro/react"
 import useAppContext from "~/hooks/useAppContext"
 import { Tabs, Tab } from "baseui/tabs"
+import { BACKGROUND_GRADIENTS, BACKGROUND_IMAGES } from "~/constants/editor"
 
 const PRESET_COLORS = [
   "#f44336",
@@ -26,15 +27,16 @@ const PRESET_COLORS = [
 export default function () {
   const scene = useActiveScene()
   const { setActiveSubMenu } = useAppContext()
+  const [isLoading, setIsLoading] = React.useState(false)
   const [activeKey, setActiveKey] = React.useState("0")
 
-  const setBackgroundColor = throttle((color: string) => {
-    if (scene) {
-      scene.updateBackground({
-        fill: color,
-      })
+  const setBackgroundMode = async (k: string) => {
+    // setIsLoading(true)
+    if (k !== activeKey) {
+      setActiveKey(k)
+      console.log({ k })
     }
-  }, 100)
+  }
 
   return (
     <Block $style={{ flex: 1, display: "flex", flexDirection: "column" }}>
@@ -74,44 +76,149 @@ export default function () {
             }}
             onChange={({ activeKey }) => {
               // @ts-ignore
-              setActiveKey(activeKey)
+              setBackgroundMode(activeKey)
             }}
             activeKey={activeKey}
           >
             <Tab title="Solid">
-              <Block $style={{ padding: "0.5rem 0" }}>
-                <Block
-                  $style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr",
-                    gap: "0.35rem",
-                  }}
-                >
-                  {PRESET_COLORS.map((color, index) => (
-                    <Block
-                      $style={{
-                        cursor: "pointer",
-                        borderRadius: "4px",
-                      }}
-                      onClick={() => setBackgroundColor(color)}
-                      backgroundColor={color}
-                      height={"38px"}
-                      key={index}
-                    ></Block>
-                  ))}
-                </Block>
-                <HexColorPicker onChange={setBackgroundColor} style={{ width: "100%" }} />
-                <Block>
-                  <Block $style={{ padding: "0.75rem 0", fontWeight: 500, fontSize: "14px" }}>Preset colors</Block>
-                </Block>
-              </Block>
+              <SolidBackround />
             </Tab>
-            <Tab title="Gradient">Content 2</Tab>
-            <Tab title="Image">Content 3</Tab>
+            <Tab title="Gradient">
+              <GradientBackground />
+            </Tab>
+            <Tab title="Image">
+              <ImageBackground />
+            </Tab>
           </Tabs>
         </Block>
-        <Block padding={"1.5rem"}>Background images</Block>
       </Scrollable>
+    </Block>
+  )
+}
+
+const GradientBackground = () => {
+  const activeScene = useActiveScene()
+  const [state, setState] = React.useState({
+    angle: 0,
+    angleTemp: 0,
+    colors: ["#F4D03F", "#16A085"],
+  })
+  const setGradient = (options: any) => {
+    setState({ ...state, ...options, angleTemp: options.angle })
+    activeScene.setBackgroundGradient(options)
+  }
+  return (
+    <Block
+      $style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(36px, 1fr))",
+        gap: "0.5rem",
+        padding: "1rem 0",
+      }}
+    >
+      {BACKGROUND_GRADIENTS.map((gradient, index) => {
+        return (
+          <Block
+            onClick={() => setGradient(gradient)}
+            key={index}
+            $style={{
+              borderRadius: "4px",
+              height: "38px",
+              cursor: "pointer",
+              backgroundColor: "#3EECAC",
+              backgroundImage: `linear-gradient(${gradient.angle + 90}deg, ${gradient.colors[0]}, ${
+                gradient.colors[1]
+              })`,
+            }}
+          ></Block>
+        )
+      })}
+    </Block>
+  )
+}
+const ImageBackground = () => {
+  const activeScene = useActiveScene()
+
+  const setBackgroundImage = React.useCallback(
+    (url: string) => {
+      if (activeScene) {
+        activeScene.objects.add({
+          type: "BackgroundImage",
+          src: url,
+        })
+      }
+    },
+    [activeScene]
+  )
+  return (
+    <Block>
+      <Block $style={{ padding: "0.5rem 0" }}>
+        <Block
+          $style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr",
+            gap: "0.35rem",
+          }}
+        >
+          {BACKGROUND_IMAGES.map((image, index) => (
+            <Block
+              $style={{
+                cursor: "pointer",
+                borderRadius: "4px",
+                backgroundImage: `url("${image}")`,
+              }}
+              onClick={() => setBackgroundImage(image)}
+              // backgroundColor={color}
+              height={"38px"}
+              key={index}
+            ></Block>
+          ))}
+        </Block>
+        {/* <HexColorPicker onChange={setBackgroundColor} style={{ width: "100%" }} /> */}
+      </Block>
+    </Block>
+  )
+}
+const SolidBackround = () => {
+  const activeScene = useActiveScene()
+
+  const setBackgroundColor = React.useCallback(
+    throttle((color: string) => {
+      if (activeScene) {
+        activeScene.updateBackground({
+          fill: color,
+        })
+      }
+    }, 100),
+    [activeScene]
+  )
+
+  return (
+    <Block>
+      <Block $style={{ padding: "0.5rem 0" }}>
+        <Block
+          $style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr",
+            gap: "0.35rem",
+          }}
+        >
+          <Block>P</Block>
+          {PRESET_COLORS.map((color, index) => (
+            <Block
+              $style={{
+                cursor: "pointer",
+                borderRadius: "4px",
+              }}
+              onClick={() => setBackgroundColor(color)}
+              backgroundColor={color}
+              height={"38px"}
+              key={index}
+            ></Block>
+          ))}
+        </Block>
+        {/* <HexColorPicker onChange={setBackgroundColor} style={{ width: "100%" }} /> */}
+      </Block>
     </Block>
   )
 }

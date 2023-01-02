@@ -138,9 +138,11 @@ class Scene {
     const objectExporter = new ObjectExporter()
 
     layers.forEach((layer: ILayer) => {
-      // @ts-ignore
-      const exportedObject = objectExporter.export(layer, frameObject)
-      template.layers = template.layers.concat(exportedObject)
+      if (layer.type !== LayerType.BACKGROUND_CONTAINER) {
+        // @ts-ignore
+        const exportedObject = objectExporter.export(layer, frameObject)
+        template.layers = template.layers.concat(exportedObject)
+      }
     })
 
     template.metadata = {

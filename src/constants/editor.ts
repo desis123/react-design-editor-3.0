@@ -3653,3 +3653,73 @@ const VideoTemplate = {
     },
   ],
 }
+
+export const BACKGROUND_GRADIENTS = [
+  {
+    angle: 19,
+    colors: ["#3EECAC", "#EE74E1"],
+  },
+  {
+    angle: 19,
+    colors: ["#21D4FD ", "#B721FF"],
+  },
+  {
+    angle: 0,
+    colors: ["#08AEEA", "#2AF598"],
+  },
+  {
+    angle: 180,
+    colors: ["#52ACFF", "#FFE32C"],
+  },
+  {
+    angle: 147,
+    colors: ["#FFE53B", "#FF2525"],
+  },
+  {
+    angle: 132,
+    colors: ["#F4D03F", "#16A085"],
+  },
+  {
+    angle: 180,
+    colors: ["#A9C9FF", "#FFBBEC"],
+  },
+  {
+    angle: 90,
+    colors: ["#74EBD5", "#9FACE6"],
+  },
+  {
+    angle: 180,
+    colors: ["#da4453", "#89216b"],
+  },
+  {
+    angle: 180,
+    colors: ["#00f260", "#0575e6"],
+  },
+  {
+    angle: 0,
+    colors: ["#0061ff", "#60efff"],
+  },
+  {
+    angle: 0,
+    colors: ["#439cfb", "#f187fb"],
+  },
+  {
+    angle: 0,
+    colors: ["#a8f368", "#f9035e"],
+  },
+  {
+    angle: 0,
+    colors: ["#fcb0f3", "#3d05dd"],
+  },
+]
+
+export const BACKGROUND_IMAGES = [
+  "https://i.ibb.co/HFHc7Cz/bg-1.jpg",
+  "https://i.ibb.co/6mMXcCz/bg-2.jpg",
+  "https://i.ibb.co/26QSsTP/bg-3.jpg",
+  "https://i.ibb.co/Kqmcbyk/bg-4.jpg",
+  "https://i.ibb.co/w6MB705/bg-5.jpg",
+  "https://i.ibb.co/8xWRBjW/bg-6.jpg",
+  "https://i.ibb.co/0rmTyTQ/bg-7.jpg",
+  "https://i.ibb.co/xjDybPK/bg-8.jpg",
+]
