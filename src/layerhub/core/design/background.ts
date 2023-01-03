@@ -9,16 +9,23 @@ class Background {
   constructor(public scene: Scene) {}
 
   public update = (options: Partial<ILayer>) => {
-    const currentBackground = this.currentBackground
+    const currentBackground = this.currentBackground!
     if (options.type) {
-      if (options.type !== currentBackground?.type) {
+      if (currentBackground.type === options.type) {
+        console.log("UPDATING CURRENT")
+        this.updateCurrentBackground(options)
+      } else {
+        console.log("RECREATING CURRENT")
         this.recreateBackground(options)
       }
-    }
-    {
+    } else {
+      console.log("UPDATING CURRENT")
       this.updateCurrentBackground(options)
     }
+    console.log("rendeing all")
+    this.scene.canvas.requestRenderAll()
   }
+
   public updateCurrentBackground = (options: Partial<ILayer>) => {
     const currentBackground = this.currentBackground
     if (currentBackground?.type === LayerType.BACKGROUND_IMAGE) {
@@ -36,25 +43,62 @@ class Background {
       const image = await loadImageFromURL(options.src)
       // @ts-ignore
       currentBackground.setElement(image)
+      currentBackground.setCoords()
+      // @ts-ignore
+      this.scaleBackground(currentBackground)
+      this.scene.canvas.requestRenderAll()
     }
+  }
+
+  private scaleBackground = (object: fabric.Object) => {
+    const frame = this.scene.frame
+    const zoomRatio = this.scene.canvas.getZoom()
+
+    if (object.type === "BackgroundImage") {
+      const isFramePortrait = frame.height! > frame.width!
+      const isObjectPortrait = object.height! > object.width!
+      const refSize = Math.max(frame.height!, frame.width!)
+      const refWidth = zoomRatio * refSize
+      if (isFramePortrait) {
+        if (isObjectPortrait) {
+          object.scaleToWidth(refWidth)
+        } else {
+          object.scaleToHeight(refWidth)
+        }
+      } else {
+        if (isObjectPortrait) {
+          object.scaleToHeight(refWidth)
+        } else {
+          object.scaleToWidth(refWidth)
+        }
+      }
+    }
+    object.center()
   }
 
   public updateSolidGradientBackground = (options: Partial<ILayer>) => {
     const background = this.currentBackground as any
-    if (options.fill.type) {
-      setObjectGradient(background, options.gradientOptions)
+    // @ts-ignore
+    if (options.gradient) {
+      // @ts-ignore
+      setObjectGradient(background, options.gradient)
     } else {
-      background.update(options)
+      background.set(options)
     }
   }
 
   public async recreateBackground(options: Partial<ILayer>) {
     const currentBackground = this.currentBackground
+    const frame = this.scene.frame
+    const zoomRatio = this.scene.canvas.getZoom()
     if (options.type === LayerType.BACKGROUND_IMAGE) {
       const background = (await this.generateBackgroundImage(options)) as any
       this.scene.canvas.insertAt(background, 2, false)
+      background.scaleToWidth(frame.width! * zoomRatio)
+      background.center()
     } else {
       const background = this.generateBackground(options)
+
       this.scene.canvas.insertAt(background, 2, false)
     }
     this.removeBackground(currentBackground)
@@ -90,7 +134,10 @@ class Background {
   }
   get currentBackground() {
     const objects = this.scene.canvas.getObjects()
-    const currentBackground = objects.find((o) => o.type === LayerType.BACKGROUND || LayerType.BACKGROUND)
+    const currentBackground = objects.find(
+      (o) => o.type === LayerType.BACKGROUND || o.type === LayerType.BACKGROUND_IMAGE
+    )
+
     return currentBackground
   }
 }

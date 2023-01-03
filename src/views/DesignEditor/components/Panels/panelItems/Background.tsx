@@ -105,7 +105,8 @@ const GradientBackground = () => {
   })
   const setGradient = (options: any) => {
     setState({ ...state, ...options, angleTemp: options.angle })
-    activeScene.setBackgroundGradient(options)
+    // @ts-ignore
+    activeScene.background.update({ gradient: options })
   }
   return (
     <Block
@@ -142,7 +143,7 @@ const ImageBackground = () => {
   const setBackgroundImage = React.useCallback(
     (url: string) => {
       if (activeScene) {
-        activeScene.objects.add({
+        activeScene.background.update({
           type: "BackgroundImage",
           src: url,
         })
@@ -185,7 +186,7 @@ const SolidBackround = () => {
   const setBackgroundColor = React.useCallback(
     throttle((color: string) => {
       if (activeScene) {
-        activeScene.updateBackground({
+        activeScene.background.update({
           fill: color,
         })
       }
