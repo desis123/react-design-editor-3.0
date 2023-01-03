@@ -14,7 +14,6 @@ class Background {
       if (currentBackground.type === options.type) {
         this.updateCurrentBackground(options)
       } else {
-        // console.log("RECREATING CURRENT")
         this.recreateBackground(options)
       }
     } else {
@@ -22,7 +21,6 @@ class Background {
       if (options.fill || (options.gradient && currentBackground.type !== LayerType.BACKGROUND)) {
         this.recreateBackground(options)
       } else {
-        // console.log("reacre")
         this.updateCurrentBackground(options)
       }
     }
@@ -91,7 +89,6 @@ class Background {
   }
 
   public async recreateBackground(options: Partial<ILayer>) {
-    // console.log("RECREATE BACKGROUND IMAGE")
     const currentBackground = this.currentBackground
     const frame = this.scene.frame
     const zoomRatio = this.scene.canvas.getZoom()

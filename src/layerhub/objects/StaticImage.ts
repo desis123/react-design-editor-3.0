@@ -71,6 +71,7 @@ export class StaticImageObject extends fabric.Image {
   async cropInit() {
     this._isCropping = true
     const canvas = this.canvas!
+    const zoomRatio = canvas.getZoom()
     canvas!.fire("crop:started", this)
     canvas._isCropping = true
     const cropped = this
@@ -87,21 +88,28 @@ export class StaticImageObject extends fabric.Image {
     const background = await loadImage(this.src)
     const nextCropped = await loadImage(this.src)
 
-    background.filters.push(new fabric.Image.filters.Brightness({ brightness: -0.25 }))
-    background.applyFilters()
+    const overlay = new fabric.Rect({
+      id: "overlay",
+      state: "crop_middleman",
+      width: canvas.width / zoomRatio,
+      height: canvas.height / zoomRatio,
+      fill: "#000000",
+      opacity: 0.25,
+      selectable: false,
+      evented: false,
+      top: 0,
+      left: 0,
+    })
 
     background.set({
       id: "background",
-      state: "xxx",
+      state: "crop_middleman",
       left: np.x,
       top: np.y,
       scaleX: cropped.scaleX,
       scaleY: cropped.scaleY,
-      // height: this.height,
-      // width: this.width,
       angle: cropped.angle,
     })
-    // console.log(background)
 
     cropped.set({
       selectable: false,
@@ -125,7 +133,7 @@ export class StaticImageObject extends fabric.Image {
 
     const cropper = new fabric.Rect({
       id: "cropper",
-      state: "xxx",
+      state: "crop_middleman",
       absolutePositioned: true,
       backgroundColor: "rgba(0,0,0,0)",
       opacity: 0.00001,
@@ -200,6 +208,8 @@ export class StaticImageObject extends fabric.Image {
     nextCropped.clipPath = cropper
 
     canvas.add(background)
+    canvas.add(overlay)
+    overlay.center()
     background.setCoords()
     background.saveState()
 
@@ -289,7 +299,7 @@ export class StaticImageObject extends fabric.Image {
     this._cropInfo = { ...cropInfo, initiated: true }
 
     canvas.getObjects().forEach((o) => {
-      if (o.state === "xxx") {
+      if (o.state === "crop_middleman") {
         canvas.remove(o)
       }
     })

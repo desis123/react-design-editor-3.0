@@ -67,11 +67,16 @@ class CanvasEvents {
   }
 
   private onCropStarted = (object: fabric.Object) => {
+    // [TODO] move is cropping to state
+    // @ts-ignore
+    this.canvas.isCropping = true
     this.editor.design.activeScene.cropObject = object
     this.editor.state.setIsCropping(true)
   }
 
   private onCropFinished = (object: fabric.Object) => {
+    // @ts-ignore
+    this.canvas.isCropping = false
     this.editor.state.setIsCropping(false)
   }
 
@@ -215,9 +220,12 @@ class CanvasEvents {
   }
 
   private onMouseWheel = (event: fabric.IEvent<any>) => {
-    const isCtrlKey = event.e.ctrlKey
-    if (isCtrlKey) {
-      this.handleZoom(event)
+    // @ts-ignore
+    if (!this.canvas.isCropping) {
+      const isCtrlKey = event.e.ctrlKey
+      if (isCtrlKey) {
+        this.handleZoom(event)
+      }
     }
   }
 
