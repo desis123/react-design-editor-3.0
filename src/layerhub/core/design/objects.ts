@@ -262,6 +262,32 @@ class Objects {
     })
   }
 
+  private scaleBackground = (object: fabric.Object) => {
+    const frame = this.scene.frame
+    const zoomRatio = this.scene.canvas.getZoom()
+
+    if (object.type === "BackgroundImage") {
+      const isFramePortrait = frame.height! > frame.width!
+      const isObjectPortrait = object.height! > object.width!
+      const refSize = Math.max(frame.height!, frame.width!)
+      const refWidth = zoomRatio * refSize
+      if (isFramePortrait) {
+        if (isObjectPortrait) {
+          object.scaleToWidth(refWidth)
+        } else {
+          object.scaleToHeight(refWidth)
+        }
+      } else {
+        if (isObjectPortrait) {
+          object.scaleToHeight(refWidth)
+        } else {
+          object.scaleToWidth(refWidth)
+        }
+      }
+    }
+    object.center()
+  }
+
   public async setAsBackgroundImage(id?: string) {
     const canvas = this.scene.canvas
     const frame = this.scene.frame
@@ -290,7 +316,8 @@ class Objects {
       canvas.remove(refObject)
 
       canvas.requestRenderAll()
-      this.scale("fill", backgroundImage.id)
+      // @ts-ignore
+      this.scaleBackground(backgroundImage)
       backgroundImage.moveTo(3)
       if (nextImage) {
         this.sendToBack(nextImage.id)
@@ -977,19 +1004,13 @@ class Objects {
    */
   public sendBackwards = (id?: string) => {
     const canvas = this.scene.canvas
-
     const objects = canvas.getObjects()
     let refObject = canvas.getActiveObject()
     if (id) {
       refObject = this.findOneById(id)
     }
-
     const index = objects.findIndex((o) => o === refObject)
-
-    const printItemIndex = objects.find((o) => o.type === LayerType.PRINT_ITEM)
-    const backgroundImage = objects.find((o) => o.type === LayerType.BACKGROUND_IMAGE)
-    const canBeMoved = printItemIndex || backgroundImage ? index > 4 : index > 3
-
+    const canBeMoved = index > 3
     if (refObject && canBeMoved) {
       canvas.sendBackwards(refObject)
     }
@@ -1000,20 +1021,12 @@ class Objects {
    */
   public sendToBack = (id?: string) => {
     const canvas = this.scene.canvas
-
     let refObject = canvas.getActiveObject()
-    const objects = canvas.getObjects()
-    const printItemIndex = objects.find((o) => o.type === LayerType.PRINT_ITEM)
-    const backgroundImage = objects.find((o) => o.type === LayerType.BACKGROUND_IMAGE)
     if (id) {
       refObject = this.findOneById(id)
     }
     if (refObject) {
-      if (printItemIndex || backgroundImage) {
-        refObject.moveTo(3)
-      } else {
-        refObject.moveTo(2)
-      }
+      refObject.moveTo(3)
     }
   }
 

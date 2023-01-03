@@ -8,29 +8,30 @@ import setObjectGradient, { generateObjectGradient } from "../utils/fabric"
 class Background {
   constructor(public scene: Scene) {}
 
-  public update = (options: Partial<ILayer>) => {
+  public update = async (options: Partial<ILayer>) => {
     const currentBackground = this.currentBackground!
     if (options.type) {
       if (currentBackground.type === options.type) {
-        this.updateCurrentBackground(options)
+        await this.updateCurrentBackground(options)
       } else {
-        this.recreateBackground(options)
+        await this.recreateBackground(options)
       }
     } else {
       // @ts-ignore
       if (options.fill || (options.gradient && currentBackground.type !== LayerType.BACKGROUND)) {
-        this.recreateBackground(options)
+        await this.recreateBackground(options)
       } else {
-        this.updateCurrentBackground(options)
+        await this.updateCurrentBackground(options)
       }
     }
     this.scene.canvas.requestRenderAll()
+    this.scene.history.save()
   }
 
-  public updateCurrentBackground = (options: Partial<ILayer>) => {
+  public updateCurrentBackground = async (options: Partial<ILayer>) => {
     const currentBackground = this.currentBackground
     if (!options.fill && currentBackground?.type === LayerType.BACKGROUND_IMAGE) {
-      this.updateBackgroundImage(options)
+      await this.updateBackgroundImage(options)
     } else {
       this.updateSolidGradientBackground(options)
     }
@@ -94,12 +95,17 @@ class Background {
     const zoomRatio = this.scene.canvas.getZoom()
     if (options.type === LayerType.BACKGROUND_IMAGE) {
       const background = (await this.generateBackgroundImage(options)) as any
+      if (!this.scene.config.outsideVisible) {
+        background.clipPath = frame
+      }
       this.scene.canvas.insertAt(background, 2, false)
       background.scaleToWidth(frame.width! * zoomRatio)
       background.center()
     } else {
       const background = this.generateBackground(options)
-
+      if (!this.scene.config.outsideVisible) {
+        background.clipPath = frame
+      }
       this.scene.canvas.insertAt(background, 2, false)
     }
     this.removeBackground(currentBackground)
