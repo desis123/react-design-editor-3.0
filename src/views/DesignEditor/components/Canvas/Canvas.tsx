@@ -4,6 +4,7 @@ import Playback from "../Playback"
 import useDesignEditorContext from "~/hooks/useDesignEditorContext"
 import ParamMenu from "../ParamMenu"
 import ContextMenu from "../ContextMenu"
+import LoadingCanvas from "./LoadingCanvas"
 
 export default function () {
   const { displayPlayback } = useDesignEditorContext()
@@ -30,21 +31,10 @@ export default function () {
       {displayPlayback && <Playback />}
       <ParamMenu />
       <ContextMenu />
+      <LoadingCanvas />
       <Canvas
         config={{
-          background: "#f1f2f6",
-
-          controlsPosition: {
-            rotation: "BOTTOM",
-          },
-          // @ts-ignore
-          type: "GRAPHIC",
-          shadow: {
-            blur: 4,
-            color: "#fcfcfc",
-            offsetX: 0,
-            offsetY: 0,
-          },
+          margin: 140,
         }}
       />
     </div>

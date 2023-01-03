@@ -1,49 +1,15 @@
 import React from "react"
 import { Block } from "baseui/block"
-import { Button, KIND } from "baseui/button"
-import { DesignType, IDesign } from "~/interfaces/DesignEditor"
+import { Button } from "baseui/button"
+import { DesignType } from "~/interfaces/DesignEditor"
 import useDesignEditorContext from "~/hooks/useDesignEditorContext"
 import Video from "~/components/Icons/Video"
 import Images from "~/components/Icons/Images"
 import Presentation from "~/components/Icons/Presentation"
-import { StyledLink } from "baseui/link"
-import { loadDesign } from "./utils/design-loader"
 
 export default function () {
   const [selectedEditor, setSelectedEditor] = React.useState<DesignType>("GRAPHIC")
-  const { setEditorType, setCurrentScene } = useDesignEditorContext()
-  const inputFileRef = React.useRef<HTMLInputElement>(null)
-  const { setScenes, setCurrentDesign } = useDesignEditorContext()
-
-  const handleInputFileRefClick = () => {
-    inputFileRef.current?.click()
-  }
-
-  const handleImportDesign = React.useCallback(async (data: IDesign) => {
-    const template = await loadDesign(data)
-    setScenes(template.scenes)
-    //   @ts-ignore
-    setCurrentDesign(template.design)
-    setCurrentScene(template.scenes[0])
-    setEditorType(data.type as "GRAPHIC")
-  }, [])
-
-  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files![0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onload = (res) => {
-        const result = res.target!.result as string
-        const design = JSON.parse(result)
-        handleImportDesign(design)
-      }
-      reader.onerror = (err) => {
-        console.log(err)
-      }
-
-      reader.readAsText(file)
-    }
-  }
+  const { setEditorType } = useDesignEditorContext()
 
   return (
     <Block
@@ -124,19 +90,6 @@ export default function () {
           <Button style={{ width: "180px" }} onClick={() => setEditorType(selectedEditor)}>
             Continue
           </Button>
-        </Block>
-        <Block $style={{ display: "grid", placeContent: "center" }}>
-          <Button onClick={handleInputFileRefClick} $as={StyledLink} kind={KIND.tertiary}>
-            Import design from file
-          </Button>
-          <input
-            multiple={false}
-            onChange={handleFileInput}
-            type="file"
-            id="file"
-            ref={inputFileRef}
-            style={{ display: "none" }}
-          />
         </Block>
       </Block>
     </Block>

@@ -26,6 +26,8 @@ interface ISceneEditorContext {
   setContextMenuTimelineRequest: React.Dispatch<React.SetStateAction<ContextMenuTimelineRequest>>
   isFullScreen: boolean
   toggleFullScreen: () => void
+  designEditorLoading: DesignEditorState
+  setDesignEditorLoading: (props: DesignEditorState) => void
 }
 
 export const DesignEditorContext = React.createContext<ISceneEditorContext>({
@@ -67,11 +69,20 @@ export const DesignEditorContext = React.createContext<ISceneEditorContext>({
     visible: false,
   },
   setContextMenuTimelineRequest: () => {},
+  designEditorLoading: {
+    isLoading: true,
+    preview: "",
+  },
+  setDesignEditorLoading(props) {},
 })
+
+interface DesignEditorState {
+  isLoading: boolean
+  preview: string
+}
 
 export const DesignEditorProvider = ({ children }: { children: React.ReactNode }) => {
   const [isFullScreen, toggleFullScreen] = useToggle(false)
-
   const [scenes, setScenes] = React.useState<IScene[]>([])
   const [currentScene, setCurrentScene] = React.useState<IScene | null>(null)
   const [currentDesign, setCurrentDesign] = React.useState<IDesign>({
@@ -92,6 +103,13 @@ export const DesignEditorProvider = ({ children }: { children: React.ReactNode }
   const [displayPreview, setDisplayPreview] = React.useState<boolean>(false)
   const [currentPreview, setCurrentPreview] = React.useState<string>("")
   const [maxTime, setMaxTime] = React.useState(5000)
+  const [designEditorLoading, setDesignEditorLoading] = React.useState<{
+    isLoading: boolean
+    preview: string
+  }>({
+    isLoading: false,
+    preview: "",
+  })
   const [contextMenuTimelineRequest, setContextMenuTimelineRequest] = React.useState<ContextMenuTimelineRequest>({
     id: "",
     left: 0,
@@ -121,6 +139,8 @@ export const DesignEditorProvider = ({ children }: { children: React.ReactNode }
     setContextMenuTimelineRequest,
     isFullScreen,
     toggleFullScreen,
+    designEditorLoading,
+    setDesignEditorLoading,
   }
   return <DesignEditorContext.Provider value={context}>{children}</DesignEditorContext.Provider>
 }

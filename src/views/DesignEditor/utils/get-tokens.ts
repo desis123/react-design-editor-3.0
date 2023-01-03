@@ -33,6 +33,7 @@ const getTokenFromLayer = (layer: ILayer) => {
   if (layer.type === "Group") {
     return getTokenFromGroup(layer)
   } else {
+    // @ts-ignore
     return layer.params
   }
 }

@@ -13,6 +13,7 @@ import { IScene } from "@layerhub-pro/types"
 import { nanoid } from "nanoid"
 import api from "~/services/api"
 import useEditorType from "~/hooks/useEditorType"
+import useDesignEditorContext from "~/hooks/useDesignEditorContext"
 
 export default function () {
   const editor = useEditor()
@@ -20,6 +21,7 @@ export default function () {
   const designs = useSelector(selectPublicDesigns)
   const editorType = useEditorType()
   const activeScene = useActiveScene()
+  const { setDesignEditorLoading } = useDesignEditorContext()
 
   const loadGraphicTemplate = async (payload: IDesign): Promise<void> => {
     const { scenes } = payload
@@ -38,6 +40,10 @@ export default function () {
   const loadDesignById = React.useCallback(
     async (designId: string) => {
       if (editor) {
+        setDesignEditorLoading({
+          isLoading: true,
+          preview: "",
+        })
         const design = await api.getPublicDesignById(designId)
         await loadGraphicTemplate(design)
 
@@ -45,6 +51,10 @@ export default function () {
 
         // editor.design.setDesign(design)
         activeScene.setScene(design.scenes[0])
+        setDesignEditorLoading({
+          isLoading: false,
+          preview: "",
+        })
       }
     },
     [editor, activeScene]
