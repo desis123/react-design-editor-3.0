@@ -3,7 +3,7 @@ import { ILayer, LayerType } from "@layerhub-pro/types"
 import type Scene from "./scene"
 import { nanoid } from "nanoid"
 import { loadImageFromURL } from "../utils/image-loader"
-import setObjectGradient from "../utils/fabric"
+import setObjectGradient, { generateObjectGradient } from "../utils/fabric"
 
 class Background {
   constructor(public scene: Scene) {}
@@ -12,23 +12,26 @@ class Background {
     const currentBackground = this.currentBackground!
     if (options.type) {
       if (currentBackground.type === options.type) {
-        console.log("UPDATING CURRENT")
         this.updateCurrentBackground(options)
       } else {
-        console.log("RECREATING CURRENT")
+        // console.log("RECREATING CURRENT")
         this.recreateBackground(options)
       }
     } else {
-      console.log("UPDATING CURRENT")
-      this.updateCurrentBackground(options)
+      // @ts-ignore
+      if (options.fill || (options.gradient && currentBackground.type !== LayerType.BACKGROUND)) {
+        this.recreateBackground(options)
+      } else {
+        // console.log("reacre")
+        this.updateCurrentBackground(options)
+      }
     }
-    console.log("rendeing all")
     this.scene.canvas.requestRenderAll()
   }
 
   public updateCurrentBackground = (options: Partial<ILayer>) => {
     const currentBackground = this.currentBackground
-    if (currentBackground?.type === LayerType.BACKGROUND_IMAGE) {
+    if (!options.fill && currentBackground?.type === LayerType.BACKGROUND_IMAGE) {
       this.updateBackgroundImage(options)
     } else {
       this.updateSolidGradientBackground(options)
@@ -88,6 +91,7 @@ class Background {
   }
 
   public async recreateBackground(options: Partial<ILayer>) {
+    // console.log("RECREATE BACKGROUND IMAGE")
     const currentBackground = this.currentBackground
     const frame = this.scene.frame
     const zoomRatio = this.scene.canvas.getZoom()
@@ -115,6 +119,12 @@ class Background {
       left: frame.left,
       fill: options.fill,
     })
+
+    if (options.gradient) {
+      const gradient = generateObjectGradient(background, options.gradient)
+      background.set("fill", gradient)
+    }
+
     return background
   }
 

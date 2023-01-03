@@ -92,7 +92,7 @@ interface LayerBaseOptions {
   duration?: number
   display?: TimeRange
   cut?: TimeRange
-  gradientOptions?: any
+  gradient?: any
 }
 
 interface Animation {
