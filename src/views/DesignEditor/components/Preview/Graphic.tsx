@@ -68,7 +68,6 @@ export default function ({ params }: { params: Record<string, string> }) {
     // console.log("LOADING")
     if (scenes) {
       const scenesJson = scenes.map((scn) => scn.toJSON())
-      console.log({ scenesJson })
       // const currentScene = editor.scene.exportToJSON()
       // const updatedScenes = scenes.map((scene) => {
       //   if (scene.id === currentScene.id) {

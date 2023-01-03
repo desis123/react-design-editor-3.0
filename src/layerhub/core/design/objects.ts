@@ -9,6 +9,7 @@ import { isArray } from "lodash"
 import ObjectExporter from "./objects-exporter"
 import setObjectGradient, { setObjectShadow } from "../utils/fabric"
 import { loadImageFromURL } from "../utils/image-loader"
+import { EffectGeneratorNext, EffectGeneratorOptions } from "../utils/effect-generator"
 
 class Objects {
   public clipboard: any
@@ -49,13 +50,14 @@ class Objects {
     if (isBackgroundImage) {
       canvas.add(object)
       object.moveTo(2)
-      this.scale("fill", object.id)
+      this.scaleBackground(object)
       object.set({
         hasControls: true,
         lockMovementY: false,
         lockMovementX: false,
         hasBorders: true,
       })
+      // this.
       if (currentBackgrounImage) {
         canvas.add(currentBackgrounImage)
         this.sendToBack(currentBackgrounImage.id)
@@ -73,7 +75,7 @@ class Objects {
       const isFramePortrait = frame.height! > frame.width!
       const isObjectPortrait = object.height! > object.width!
       const refSize = Math.min(frame.height!, frame.width!)
-      const refWidth = zoomRatio * refSize * 0.5
+      const refWidth = zoomRatio * refSize * 0.95
       if (isFramePortrait) {
         if (isObjectPortrait) {
           object.scaleToWidth(refWidth)
@@ -159,6 +161,87 @@ class Objects {
         refObject.set(property as keyof fabric.Object, options[property])
         canvas.requestRenderAll()
       }
+      this.scene.history.save()
+    }
+  }
+
+  public getActiveObject() {
+    const canvas = this.scene.canvas
+    console.log(canvas.getActiveObject() as any)
+  }
+  public updateEffect = (options: Partial<EffectGeneratorOptions>, id?: string) => {
+    const canvas = this.scene.canvas
+    let refObject = canvas.getActiveObject() as any
+    if (id) {
+      refObject = this.findOneById(id)
+    }
+    const effectGeneratorNext = new EffectGeneratorNext(
+      {
+        effect: refObject.effect,
+        shadow: refObject.shadow,
+        stroke: refObject.stroke,
+        strokeWidth: refObject.strokeWidth,
+        fill: refObject.fill,
+        light: refObject.light,
+      },
+      {
+        effect: options.effect ? options.effect : refObject.effect,
+        shadow: options.shadow,
+        stroke: options.stroke,
+        strokeWidth: options.strokeWidth,
+        fill: options.fill,
+        light: options.light,
+      }
+    )
+    const effect = effectGeneratorNext.generate()
+    this.update(effect, id)
+  }
+
+  public addElement = async (src: string) => {
+    const canvas = this.scene.canvas
+    const path = canvas.getActiveObject()
+    if (path) {
+      const imageElement = await loadImageFromURL(src)
+      const image = new fabric.StaticImage(imageElement, {
+        src: src,
+      })
+
+      const pH = path.getScaledHeight()
+      const pW = path.getScaledWidth()
+      const iH = image.getScaledHeight()
+      const iW = image.getScaledWidth()
+
+      const isPathPortrait = pH >= pW
+      const isImagePortrait = iH >= iW
+
+      const patternSourceCanvas = new fabric.StaticCanvas("", {
+        width: pW,
+        height: pH,
+      })
+
+      if (isPathPortrait) {
+        if (isImagePortrait) {
+          image.scaleToWidth(pW)
+        } else {
+          image.scaleToHeight(pH)
+        }
+      } else {
+        if (isImagePortrait) {
+          image.scaleToWidth(pW)
+        } else {
+          image.scaleToHeight(pH)
+        }
+      }
+      // @ts-ignore
+      patternSourceCanvas.add(image)
+
+      const pattern = new fabric.Pattern({
+        // @ts-ignore
+        source: patternSourceCanvas.getElement(),
+        repeat: "repeat",
+      })
+      path.set("fill", pattern)
+      canvas.requestRenderAll()
       this.scene.history.save()
     }
   }
@@ -268,21 +351,12 @@ class Objects {
 
     if (object.type === "BackgroundImage") {
       const isFramePortrait = frame.height! > frame.width!
-      const isObjectPortrait = object.height! > object.width!
       const refSize = Math.max(frame.height!, frame.width!)
       const refWidth = zoomRatio * refSize
       if (isFramePortrait) {
-        if (isObjectPortrait) {
-          object.scaleToWidth(refWidth)
-        } else {
-          object.scaleToHeight(refWidth)
-        }
+        object.scaleToHeight(refWidth)
       } else {
-        if (isObjectPortrait) {
-          object.scaleToHeight(refWidth)
-        } else {
-          object.scaleToWidth(refWidth)
-        }
+        object.scaleToWidth(refWidth)
       }
     }
     object.center()

@@ -32,12 +32,9 @@ export class BackgroundContainerObject extends fabric.Rect {
   }
 }
 
-fabric.BackgroundContainer = fabric.util.createClass(
-  BackgroundContainerObject,
-  {
-    type: BackgroundContainerObject.type,
-  }
-)
+fabric.BackgroundContainer = fabric.util.createClass(BackgroundContainerObject, {
+  type: BackgroundContainerObject.type,
+})
 fabric.BackgroundContainer.fromObject = BackgroundContainerObject.fromObject
 
 export interface BackgroundContainerOptions extends fabric.IRectOptions {

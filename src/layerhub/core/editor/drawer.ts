@@ -29,7 +29,13 @@ interface IObjectDrawer {
 
 class LineDrawer implements IObjectDrawer {
   drawingMode: DrawingMode = DrawingMode.Line
-  make(x: number, y: number, options: fabric.IObjectOptions, x2?: number, y2?: number): Promise<fabric.Object> {
+  make(
+    x: number,
+    y: number,
+    options: fabric.IObjectOptions,
+    x2?: number,
+    y2?: number
+  ): Promise<fabric.Object> {
     return new Promise<fabric.Object>((resolve) => {
       resolve(new fabric.Line([x, y, x2!, y2!], options))
     })
@@ -50,7 +56,13 @@ class LineDrawer implements IObjectDrawer {
 class RectangleDrawer implements IObjectDrawer {
   private startPoint: { x: number; y: number } = { x: 0, y: 0 }
   drawingMode: DrawingMode = DrawingMode.Rectangle
-  make(x: number, y: number, options: fabric.IObjectOptions, width?: number, height?: number): Promise<fabric.Object> {
+  make(
+    x: number,
+    y: number,
+    options: fabric.IObjectOptions,
+    width?: number,
+    height?: number
+  ): Promise<fabric.Object> {
     this.startPoint.x = x
     this.startPoint.y = y
     return new Promise<fabric.Object>((resolve) => {
@@ -86,7 +98,13 @@ class OvalDrawer implements IObjectDrawer {
   private startPoint: { x: number; y: number } = { x: 0, y: 0 }
   drawingMode: DrawingMode = DrawingMode.Oval
 
-  make(x: number, y: number, options: fabric.IObjectOptions, rx?: number, ry?: number): Promise<fabric.Object> {
+  make(
+    x: number,
+    y: number,
+    options: fabric.IObjectOptions,
+    rx?: number,
+    ry?: number
+  ): Promise<fabric.Object> {
     this.startPoint.x = x
     this.startPoint.y = y
 
@@ -124,7 +142,13 @@ class TriangleDrawer implements IObjectDrawer {
 
   drawingMode: DrawingMode = DrawingMode.Triangle
 
-  make(x: number, y: number, options: fabric.IObjectOptions, width?: number, height?: number): Promise<fabric.Object> {
+  make(
+    x: number,
+    y: number,
+    options: fabric.IObjectOptions,
+    width?: number,
+    height?: number
+  ): Promise<fabric.Object> {
     this.startPoint.x = x
     this.startPoint.y = y
 
@@ -161,7 +185,13 @@ class TriangleDrawer implements IObjectDrawer {
 class PolylineDrawer implements IObjectDrawer {
   drawingMode: DrawingMode = DrawingMode.Polyline
 
-  make(x: number, y: number, options: fabric.IObjectOptions, rx?: number, ry?: number): Promise<fabric.Object> {
+  make(
+    x: number,
+    y: number,
+    options: fabric.IObjectOptions,
+    rx?: number,
+    ry?: number
+  ): Promise<fabric.Object> {
     return new Promise<fabric.Object>((resolve) => {
       resolve(new fabric.Polyline([{ x, y }], { ...options, fill: "transparent" }))
     })

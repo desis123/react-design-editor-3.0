@@ -145,8 +145,6 @@ class PlaybackController {
    * @returns
    */
   public play = (time: number) => {
-    // console.log(time)
-    // console.log("playing")
     for (let [key, value] of this.resources) {
       this.applySpriteOptions(value.sprite, value.position)
 

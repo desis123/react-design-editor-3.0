@@ -11,11 +11,21 @@ interface Param {
   name: string
 }
 
+const REF_TARGET = {
+  NONE: "fill",
+  NEON: "stroke",
+  HOLLOW: "stroke",
+  LIFT: "fill",
+  SHADOW: "fill",
+}
+
 export class StaticTextObject extends fabric.Textbox {
   static type = "StaticText"
   public fontURL: string = ""
   public params: Param[] = []
   public paramBounds: any[] = []
+  public effect: any
+  public light: any
 
   private getParamsFromKeys(text: string): Param[] {
     let params: Param[] = []
@@ -307,22 +317,34 @@ export class StaticTextObject extends fabric.Textbox {
   clearStyles() {
     this.removeStyleFromTo(0, this.text?.length!)
   }
+
   updateParams() {
     this.clearStyles()
     this.setParams()
     this.setParamBounds()
   }
 
+  getRefColor() {
+    if (!this.effect || this.effect === "NONE") {
+      return this.fill
+    }
+    // @ts-ignore
+    return this[REF_TARGET[this.effect]]
+  }
   toObject(propertiesToInclude = []) {
     return fabric.util.object.extend(super.toObject.call(this, propertiesToInclude), {
       fontURL: this.fontURL,
       params: this.params.map((p) => ({ key: p.key, name: p.name })),
+      effect: this.effect,
+      light: this.light,
     })
   }
   toJSON(propertiesToInclude = []) {
     return fabric.util.object.extend(super.toObject.call(this, propertiesToInclude), {
       fontURL: this.fontURL,
       params: this.params.map((p) => ({ key: p.key, name: p.name })),
+      effect: this.effect,
+      light: this.light,
     })
   }
 

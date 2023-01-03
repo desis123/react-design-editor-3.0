@@ -58,21 +58,12 @@ class Background {
 
     if (object.type === "BackgroundImage") {
       const isFramePortrait = frame.height! > frame.width!
-      const isObjectPortrait = object.height! > object.width!
       const refSize = Math.max(frame.height!, frame.width!)
       const refWidth = zoomRatio * refSize
       if (isFramePortrait) {
-        if (isObjectPortrait) {
-          object.scaleToWidth(refWidth)
-        } else {
-          object.scaleToHeight(refWidth)
-        }
+        object.scaleToHeight(refWidth)
       } else {
-        if (isObjectPortrait) {
-          object.scaleToHeight(refWidth)
-        } else {
-          object.scaleToWidth(refWidth)
-        }
+        object.scaleToWidth(refWidth)
       }
     }
     object.center()
@@ -92,14 +83,14 @@ class Background {
   public async recreateBackground(options: Partial<ILayer>) {
     const currentBackground = this.currentBackground
     const frame = this.scene.frame
-    const zoomRatio = this.scene.canvas.getZoom()
     if (options.type === LayerType.BACKGROUND_IMAGE) {
       const background = (await this.generateBackgroundImage(options)) as any
       if (!this.scene.config.outsideVisible) {
         background.clipPath = frame
       }
       this.scene.canvas.insertAt(background, 2, false)
-      background.scaleToWidth(frame.width! * zoomRatio)
+      this.scaleBackground(background)
+      background.setCoords()
       background.center()
     } else {
       const background = this.generateBackground(options)

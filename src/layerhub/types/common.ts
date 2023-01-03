@@ -8,5 +8,4 @@ export interface TimeRange {
   to?: number
 }
 
-
 export type RotationControlPosition = "TOP" | "BOTTOM"

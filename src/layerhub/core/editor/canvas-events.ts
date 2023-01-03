@@ -131,15 +131,10 @@ class CanvasEvents {
     if (target instanceof fabric.Textbox) {
       this.scaleTextbox(target)
     }
-    // this.editor.history.save();
-    this.editor.design.activeScene.history.save()
-    // MOVE ALL SEPARATORS TO TOP
-    // const objects = this.canvas.getObjects();
-    // objects.forEach((o) => {
-    //   if (o.type === LayerType.SEPARATOR) {
-    //     o.bringToFront();
-    //   }
-    // });
+    // @ts-ignore
+    if (!target.state) {
+      this.editor.design.activeScene.history.save()
+    }
   }
 
   private scaleTextbox = (target: fabric.Textbox) => {

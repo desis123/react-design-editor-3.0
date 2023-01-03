@@ -3722,4 +3722,6 @@ export const BACKGROUND_IMAGES = [
   "https://i.ibb.co/8xWRBjW/bg-6.jpg",
   "https://i.ibb.co/0rmTyTQ/bg-7.jpg",
   "https://i.ibb.co/xjDybPK/bg-8.jpg",
+  "https://i.ibb.co/bs4t8MK/Rectangle-25821.png",
+  "https://i.ibb.co/M179Rpc/Rectangle-25822.png",
 ]

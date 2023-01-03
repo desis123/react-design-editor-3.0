@@ -70,7 +70,8 @@ class ObjectImporter {
       try {
         const baseOptions = this.getBaseOptions(item)
         const metadata = item.metadata
-        const { textAlign, fontFamily, fontSize, charSpacing, lineHeight, text, underline, fill } = item as IStaticText
+        const { textAlign, fontFamily, fontSize, charSpacing, lineHeight, text, underline, fill } =
+          item as IStaticText
 
         const textOptions = {
           ...baseOptions,

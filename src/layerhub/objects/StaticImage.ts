@@ -238,8 +238,8 @@ export class StaticImageObject extends fabric.Image {
     if (this._cropper && this._background) {
       const isInCropper = this._cropper.containsPoint(e.pointer)
       const isInBackground = this._background.containsPoint(e.pointer)
-      if (isInCropper) {
-        const canvas = this.canvas
+      const canvas = this.canvas
+      if (isInCropper && canvas) {
         canvas.discardActiveObject()
         canvas.setActiveObject(this._cropper)
         canvas.requestRenderAll()
@@ -252,9 +252,9 @@ export class StaticImageObject extends fabric.Image {
 
   async cropApply() {
     const canvas = this.canvas!
+    if (!this._isCropping && !canvas) return
     canvas!.fire("crop:finished", this)
 
-    if (!this._isCropping) return
     canvas.off("mouse:up", this.onMouseUp.bind(this))
     this._isCropping = false
     canvas._isCropping = false

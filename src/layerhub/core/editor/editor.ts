@@ -58,7 +58,12 @@ export class Editor extends EventManager {
         state: this.state,
       })
       // @ts-ignore
-      const design = createDesign()
+      const design = createDesign({
+        frame: {
+          width: 1080,
+          height: 1920,
+        },
+      })
       // const design = data as IDesign
       const fitRatio = getFitRatio(design.frame, this.canvas.canvas, this.config)
 
