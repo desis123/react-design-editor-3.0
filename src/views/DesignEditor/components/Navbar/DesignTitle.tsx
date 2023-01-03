@@ -3,7 +3,7 @@ import { Input } from "baseui/input"
 import { Block } from "baseui/block"
 import CloudCheck from "~/components/Icons/CloudCheck"
 import { StatefulTooltip } from "baseui/tooltip"
-import { useDesign } from "~/layerhub"
+import { useDesign, useTemplate } from "@layerhub-pro/react"
 
 interface State {
   name: string
@@ -12,24 +12,32 @@ interface State {
 
 export default function () {
   const [state, setState] = React.useState<State>({ name: "My first design.", width: 0 })
+  const template = useTemplate()
   const design = useDesign()
   const inputTitleRef = React.useRef<Input>(null)
   const spanRef = React.useRef<HTMLDivElement | null>(null)
 
-  const handleInputChange = (name: string) => {
-    setState({ ...state, name: name, width: spanRef.current?.clientWidth! })
-    // setCurrentDesign({ ...currentDesign, name })
-  }
+  const handleInputChange = React.useCallback(
+    (name: string) => {
+      setState({ ...state, name: name, width: spanRef.current?.clientWidth! })
+      if (design) {
+        design.updateDesign({
+          name,
+        })
+      }
+    },
+    [design]
+  )
 
   React.useEffect(() => {
-    if (design) {
-      const name = design.design.name
+    if (template) {
+      const name = template.name
       if (name || name === "") {
         spanRef.current!.innerHTML = name
         setState({ ...state, name: name, width: spanRef.current?.clientWidth! + 20 })
       }
     }
-  }, [design])
+  }, [template])
 
   React.useEffect(() => {
     setState({ ...state, width: spanRef.current?.clientWidth! + 20 })

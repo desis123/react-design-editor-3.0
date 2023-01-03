@@ -8,6 +8,8 @@ import { useActiveScene } from "@layerhub-pro/react"
 import useAppContext from "~/hooks/useAppContext"
 import { Tabs, Tab } from "baseui/tabs"
 import { BACKGROUND_GRADIENTS, BACKGROUND_IMAGES } from "~/constants/editor"
+import { Input } from "baseui/input"
+import { PLACEMENT, StatefulPopover } from "baseui/popover"
 
 const PRESET_COLORS = [
   "#f44336",
@@ -109,31 +111,32 @@ const GradientBackground = () => {
     activeScene.background.update({ gradient: options })
   }
   return (
-    <Block
-      $style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(36px, 1fr))",
-        gap: "0.5rem",
-        padding: "1rem 0",
-      }}
-    >
-      {BACKGROUND_GRADIENTS.map((gradient, index) => {
-        return (
-          <Block
-            onClick={() => setGradient(gradient)}
-            key={index}
-            $style={{
-              borderRadius: "4px",
-              height: "38px",
-              cursor: "pointer",
-              backgroundColor: "#3EECAC",
-              backgroundImage: `linear-gradient(${gradient.angle + 90}deg, ${gradient.colors[0]}, ${
-                gradient.colors[1]
-              })`,
-            }}
-          ></Block>
-        )
-      })}
+    <Block $style={{ padding: "0.5rem 0" }}>
+      <Block
+        $style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr",
+          gap: "0.35rem",
+        }}
+      >
+        {BACKGROUND_GRADIENTS.map((gradient, index) => {
+          return (
+            <Block
+              onClick={() => setGradient(gradient)}
+              key={index}
+              $style={{
+                borderRadius: "4px",
+                height: "38px",
+                cursor: "pointer",
+                backgroundColor: "#3EECAC",
+                backgroundImage: `linear-gradient(${gradient.angle + 90}deg, ${gradient.colors[0]}, ${
+                  gradient.colors[1]
+                })`,
+              }}
+            ></Block>
+          )
+        })}
+      </Block>
     </Block>
   )
 }
@@ -167,15 +170,14 @@ const ImageBackground = () => {
                 cursor: "pointer",
                 borderRadius: "4px",
                 backgroundImage: `url("${image}")`,
+                backgroundSize: "cover",
               }}
               onClick={() => setBackgroundImage(image)}
-              // backgroundColor={color}
               height={"38px"}
               key={index}
             ></Block>
           ))}
         </Block>
-        {/* <HexColorPicker onChange={setBackgroundColor} style={{ width: "100%" }} /> */}
       </Block>
     </Block>
   )
@@ -204,7 +206,6 @@ const SolidBackround = () => {
             gap: "0.35rem",
           }}
         >
-          <Block>P</Block>
           {PRESET_COLORS.map((color, index) => (
             <Block
               $style={{
@@ -217,6 +218,41 @@ const SolidBackround = () => {
               key={index}
             ></Block>
           ))}
+        </Block>
+        <Block $style={{ padding: "1rem 0" }}>
+          <Block $style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+            <StatefulPopover
+              placement={PLACEMENT.bottomLeft}
+              content={
+                <div
+                  style={{
+                    padding: "1rem",
+                    background: "#ffffff",
+                    width: "200px",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "1rem",
+                    textAlign: "center",
+                  }}
+                >
+                  <HexColorPicker
+                    onChange={(color) => {
+                      // changeBackgroundColor(c, color)
+                    }}
+                  />
+                </div>
+              }
+              accessibilityType={"tooltip"}
+            >
+              <Block
+                $style={{ height: "32px", width: "32px", background: "#000000", flex: "none", borderRadius: "4px" }}
+              >
+                C
+              </Block>
+            </StatefulPopover>
+
+            <Input size="compact" value={"#FFFFFF"} />
+          </Block>
         </Block>
         {/* <HexColorPicker onChange={setBackgroundColor} style={{ width: "100%" }} /> */}
       </Block>
