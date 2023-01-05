@@ -1,3 +1,4 @@
+import { fabric } from "fabric"
 import { IConfig, IDesign } from "@layerhub-pro/types"
 import { FabricCanvas, IState } from "../common/interfaces"
 import { Editor } from "../editor/editor"
@@ -83,6 +84,7 @@ class Design {
 
   public async addScene() {
     const emptyScene = createScene({ frame: this.design.frame })
+    console.log({ emptyScene })
     const scene = new Scene({
       scene: emptyScene,
       canvas: this.canvas,
@@ -98,6 +100,12 @@ class Design {
     this.setActiveScene(scene)
   }
 
+  public async duplicateScene() {
+    const currentScene = this.activeScene.toJSON()
+    // const current
+    // fabric.util.object.clone()
+    console.log({ currentScene })
+  }
   public setOne(scene: Scene) {
     this.scenes.push(scene)
     this.updateContext()

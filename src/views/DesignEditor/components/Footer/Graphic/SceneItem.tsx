@@ -25,24 +25,24 @@ export default function ({ isCurrentScene, scene, preview, index, setActiveScene
   }
 
   React.useEffect(() => {
-    // const timeLineItemDiv = sceneRef.current
-    // const handleContextMenu = (event: MouseEvent) => {
-    //   event.preventDefault()
-    //   setContextMenuTimelineRequest({
-    //     id: scene.id!,
-    //     left: event.pageX,
-    //     top: event.pageY,
-    //     visible: true,
-    //   })
-    // }
-    // if (timeLineItemDiv) {
-    //   timeLineItemDiv.addEventListener("contextmenu", handleContextMenu)
-    // }
-    // return () => {
-    //   if (timeLineItemDiv) {
-    //     timeLineItemDiv.removeEventListener("contextmenu", handleContextMenu)
-    //   }
-    // }
+    const timeLineItemDiv = sceneRef.current
+    const handleContextMenu = (event: MouseEvent) => {
+      event.preventDefault()
+      setContextMenuTimelineRequest({
+        id: scene.id!,
+        left: event.pageX,
+        top: event.pageY,
+        visible: true,
+      })
+    }
+    if (timeLineItemDiv) {
+      timeLineItemDiv.addEventListener("contextmenu", handleContextMenu)
+    }
+    return () => {
+      if (timeLineItemDiv) {
+        timeLineItemDiv.removeEventListener("contextmenu", handleContextMenu)
+      }
+    }
   }, [sceneRef, scene])
 
   return (

@@ -4,7 +4,7 @@ import useDesignEditorContext from "~/hooks/useDesignEditorContext"
 import { nanoid } from "nanoid"
 import useOnClickOutside from "~/hooks/useOnClickOutside"
 import { getDefaultTemplate } from "~/constants/design-editor"
-import { useEditor, useFrame } from "@layerhub-pro/react"
+import { useDesign, useEditor, useFrame } from "@layerhub-pro/react"
 import { IScene } from "@layerhub-pro/types"
 
 export default function () {
@@ -17,6 +17,7 @@ export default function () {
     setCurrentDesign,
   } = useDesignEditorContext()
   const ref = React.useRef<HTMLDivElement | null>(null)
+  const design = useDesign()
   const editor = useEditor()
   const frame = useFrame()
   useOnClickOutside(ref, () => {
@@ -59,6 +60,7 @@ export default function () {
   const makeAddScene = () => {}
 
   const makeDuplicateScene = async () => {
+    design?.duplicateScene()
     // UPDATE ALL SCENES
     // const currentScene = editor.scene.exportToJSON()
     // const updatedScenes: IScene[] = []
@@ -80,6 +82,7 @@ export default function () {
     // setCurrentScene(newScene)
     // setContextMenuTimelineRequest({ ...contextMenuTimelineRequest, visible: false })
   }
+  console.log({ contextMenuTimelineRequest })
 
   return (
     <Block
@@ -90,8 +93,8 @@ export default function () {
         backgroundColor: "#ffffff",
         boxShadow: "0 0 0 1px rgba(64,87,109,0.07),0 2px 12px rgba(53,71,90,0.2)",
         zIndex: 4,
-        top: `${contextMenuTimelineRequest.top - timelineItemsContainerBounds.top - 80}px`,
-        left: `${contextMenuTimelineRequest.left - timelineItemsContainerBounds.left}px`,
+        top: `${-0}px`,
+        left: `${60}px`,
         padding: "0.5rem 0",
       }}
     >
