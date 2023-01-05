@@ -1,4 +1,4 @@
-import { useActiveObject, useActiveScene, useContextMenuRequest, useEditor } from "@layerhub-pro/react"
+import { Renderer, useActiveObject, useActiveScene, useContextMenuRequest, useEditor } from "@layerhub-pro/react"
 import { IScene } from "@layerhub-pro/types"
 import { useStyletron } from "baseui"
 import BringToFront from "~/components/Icons/BringToFront"
@@ -15,21 +15,25 @@ function ContextMenu() {
   const activeObject = useActiveObject() as any
   const editor = useEditor()
   const activeScene = useActiveScene()
+
   const handleAsComponentHandler = async () => {
-    if (editor) {
-      // const component: any = await editor.scene.exportAsComponent()
-      // if (component) {
-      //   const design: IScene = {
-      //     id: "some_id",
-      //     frame: {
-      //       width: component.width,
-      //       height: component.height,
-      //     },
-      //     layers: [component],
-      //     metadata: {},
-      //   }
-      //   const preview = await renderer.render(design)
-      // }
+    if (activeScene) {
+      const component: any = await activeScene.exportComponent()
+      if (component) {
+        const design: IScene = {
+          id: "some_id",
+          frame: {
+            width: component.width,
+            height: component.height,
+          },
+          layers: [component],
+          metadata: {},
+        }
+        console.log(design)
+        const renderer = new Renderer()
+        const preview = await renderer.render(design, {})
+        console.log(preview)
+      }
     }
   }
   if (!contextMenuRequest || !contextMenuRequest.target || !editor || !activeScene) {
@@ -162,8 +166,8 @@ function ContextMenu() {
           </ContextMenuItem>
           <ContextMenuItem
             onClick={() => {
-              // handleAsComponentHandler()
-              // editor.cancelContextMenuRequest()
+              handleAsComponentHandler()
+              editor.cancelContextMenuRequest()
             }}
             icon="Elements"
             label="Save as component"
@@ -184,7 +188,6 @@ function ContextMenu() {
           {activeObject?.type === "StaticImage" && (
             <ContextMenuItem
               onClick={() => {
-                // handleAsComponentHandler()
                 activeScene.objects.setAsBackgroundImage()
                 editor.cancelContextMenuRequest()
               }}

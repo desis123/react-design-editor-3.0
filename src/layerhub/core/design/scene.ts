@@ -2,7 +2,7 @@ import { fabric } from "fabric"
 import { nanoid } from "nanoid"
 import { IConfig, IFrame, ILayer, IScene } from "@layerhub-pro/types"
 import { LayerType } from "../common/constants"
-import { CanvasJSON, FabricCanvas, GradientOptions, IState } from "../common/interfaces"
+import { CanvasJSON, FabricCanvas, IState } from "../common/interfaces"
 import { type Editor } from "../editor/editor"
 import ObjectImporter from "./objects-importer"
 import Renderer from "../utils/renderer"
@@ -10,10 +10,10 @@ import History from "./history"
 import ObjectExporter from "./objects-exporter"
 import ObjectsManager from "./objects"
 import _ from "lodash"
-import setObjectGradient from "../utils/fabric"
 import { getFitRatio } from "../utils/zoom"
 import { base64ImageToFile } from "../utils/parser"
 import Background from "./background"
+import getSelectionType from "../utils/get-selection-type"
 
 interface SceneOptions {
   scene: IScene
@@ -156,6 +156,58 @@ class Scene {
   public async toDataURL(): Promise<string> {
     const data = await this.renderer.render(this.scene, {})
     return data
+  }
+
+  public exportComponent = async () => {
+    const activeObject = this.canvas.getActiveObject()
+    const selectionType = getSelectionType(activeObject)
+    const frame: any = this.frame
+    const objectExporter = new ObjectExporter()
+    if (activeObject && selectionType) {
+      const isMixed = selectionType.length > 1
+      if (activeObject.type === "activeSelection" || activeObject.type === "group") {
+        let clonedObjects: any[] = []
+        // @ts-ignore
+        const objects = activeObject._objects
+        for (const object of objects!) {
+          const cloned = await new Promise((resolve) => {
+            object.clone((c: fabric.Object) => {
+              c.clipPath = undefined
+              resolve(c)
+            }, this.config.properties)
+          })
+          clonedObjects = clonedObjects.concat(cloned)
+        }
+
+        const group = new fabric.Group(clonedObjects)
+        const component = objectExporter.export(group.toJSON(this.config.properties), frame) as any
+        const metadata = component.metadata ? component.metadata : {}
+
+        return {
+          ...component,
+          top: 0,
+          left: 0,
+          metadata: {
+            ...metadata,
+            category: isMixed ? "mixed" : "single",
+            types: selectionType,
+          },
+        }
+      } else {
+        const component = objectExporter.export(activeObject.toJSON(this.config.properties), frame)
+        const metadata = component.metadata ? component.metadata : {}
+        return {
+          ...component,
+          top: 0,
+          left: 0,
+          metadata: {
+            ...metadata,
+            category: isMixed ? "mixed" : "single",
+            types: selectionType,
+          },
+        }
+      }
+    }
   }
 
   public updateLayers() {
