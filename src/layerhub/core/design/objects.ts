@@ -338,7 +338,6 @@ class Objects {
         nextImage.moveTo(2)
         this.scene.state.setActiveObject(nextImage)
         canvas.setActiveObject(nextImage as unknown as fabric.Object)
-        // resolve(nextImage)
       } else {
         resolve(null)
       }

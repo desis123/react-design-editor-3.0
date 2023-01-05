@@ -105,6 +105,8 @@ class ObjectsExporter {
       underline,
       fontURL,
       metadata,
+      // @ts-ignore
+      params: item.params,
     }
     return object
   }
@@ -368,6 +370,7 @@ class ObjectsExporter {
       preview,
       rx,
       ry,
+      locked,
     } = item as Required<ILayer>
     const baseOptions = {
       id,
@@ -394,6 +397,7 @@ class ObjectsExporter {
       preview,
       rx,
       ry,
+      locked,
     }
     return baseOptions
   }

@@ -72,6 +72,7 @@ interface LayerBaseOptions {
   skewX?: number
   skewY?: number
   stroke?: string
+  locked?: boolean
   fill?: any
   rx?: number
   ry?: number

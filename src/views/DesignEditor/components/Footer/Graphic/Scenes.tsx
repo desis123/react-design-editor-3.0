@@ -92,7 +92,6 @@ export default function () {
   const setActiveScene = React.useCallback(
     (id: string) => {
       if (editor) {
-        console.log({ id })
         editor.design.setActiveScene(id)
       }
     },

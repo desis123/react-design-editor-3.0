@@ -36,7 +36,7 @@ export default function () {
     // setIsLoading(true)
     if (k !== activeKey) {
       setActiveKey(k)
-      console.log({ k })
+      // console.log({ k })
     }
   }
 

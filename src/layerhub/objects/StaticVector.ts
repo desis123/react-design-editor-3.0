@@ -75,6 +75,7 @@ class StaticVectorObject extends fabric.Group {
               this.canvas.requestRenderAll()
             }
           },
+          // @ts-ignore
           null,
           { crossOrigin: "Anonymous" }
         )

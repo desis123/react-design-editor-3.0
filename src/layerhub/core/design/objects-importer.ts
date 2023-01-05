@@ -13,7 +13,7 @@ import {
   IStaticVideo,
 } from "@layerhub-pro/types"
 import { defaultObjectOptions } from "../constants/defaults"
-import { updateObjectBounds, updateObjectShadow } from "../utils/fabric"
+import { updateObjectBounds, updateObjectLock, updateObjectShadow } from "../utils/fabric"
 import { loadImageFromURL } from "../utils/image-loader"
 import { createVideoElement } from "../utils/video-loader"
 
@@ -76,6 +76,7 @@ class ObjectImporter {
         // @ts-ignore
         const element = new fabric.StaticText(textOptions)
         updateObjectBounds(element, options)
+        updateObjectLock(element, props.item)
         updateObjectShadow(element, item.shadow)
 
         resolve(element)
@@ -107,6 +108,7 @@ class ObjectImporter {
         })
 
         updateObjectBounds(element, options)
+        updateObjectLock(element, props.item)
         updateObjectShadow(element, item.shadow)
 
         resolve(element)
@@ -205,6 +207,7 @@ class ObjectImporter {
         })
 
         updateObjectBounds(element, options)
+        updateObjectLock(element, props.item)
         updateObjectShadow(element, item.shadow)
 
         resolve(element)
@@ -236,6 +239,7 @@ class ObjectImporter {
         })
 
         updateObjectBounds(element, options)
+        updateObjectLock(element, props.item)
         updateObjectShadow(element, item.shadow)
         resolve(element)
       } catch (err) {
@@ -285,6 +289,7 @@ class ObjectImporter {
         const element = new fabric.Line([x1, y1, x2, y2], baseOptions)
 
         updateObjectBounds(element, options)
+        updateObjectLock(element, props.item)
         updateObjectShadow(element, item.shadow)
 
         resolve(element)
@@ -302,6 +307,7 @@ class ObjectImporter {
         const element = new fabric.Ellipse(baseOptions)
 
         updateObjectBounds(element, options)
+        updateObjectLock(element, props.item)
         updateObjectShadow(element, item.shadow)
 
         resolve(element)
@@ -362,6 +368,7 @@ class ObjectImporter {
         })
 
         updateObjectBounds(element, options)
+        updateObjectLock(element, props.item)
         updateObjectShadow(element, item.shadow)
 
         resolve(element)
@@ -394,6 +401,7 @@ class ObjectImporter {
           })
 
           updateObjectBounds(element, options)
+          updateObjectLock(element, props.item)
           updateObjectShadow(element, item.shadow)
 
           resolve(element)
@@ -428,6 +436,7 @@ class ObjectImporter {
         })
 
         updateObjectBounds(element, options)
+        updateObjectLock(element, props.item)
         updateObjectShadow(element, item.shadow)
 
         resolve(element)

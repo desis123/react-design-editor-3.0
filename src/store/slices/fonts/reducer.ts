@@ -29,7 +29,6 @@ function fuzzySearch(items: IFontFamily[], query: string) {
       }
     })
     if (matches == search.length) {
-      // console.log(i, found, 'was found');
       // @ts-ignore
       found.push(i)
     }

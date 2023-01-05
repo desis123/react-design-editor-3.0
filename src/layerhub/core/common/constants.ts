@@ -17,6 +17,7 @@ export const PROPERTIES_TO_INCLUDE = [
   "preview",
   "rx",
   "ry",
+  "locked",
 ]
 
 export const defaultFrameOptions = {
