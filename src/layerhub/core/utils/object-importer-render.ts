@@ -12,13 +12,14 @@ import {
   IStaticText,
   IStaticVector,
 } from "@layerhub-pro/types"
+import { replaceParamWithValue } from "./replace-key-value"
 
 class ObjectImporter {
   async import(item: any, params: any): Promise<fabric.Object> {
     let object
     switch (item.type) {
       case LayerType.STATIC_TEXT:
-        object = await this.staticText(item)
+        object = await this.staticText(item, params)
         break
       case LayerType.STATIC_IMAGE:
         object = await this.staticImage(item)
@@ -65,13 +66,14 @@ class ObjectImporter {
     return object as fabric.Object
   }
 
-  public staticText(item: ILayer): Promise<fabric.StaticText> {
+  public staticText(item: ILayer, params: Record<string, string>): Promise<fabric.StaticText> {
     return new Promise((resolve, reject) => {
       try {
         const baseOptions = this.getBaseOptions(item)
         const metadata = item.metadata
-        const { textAlign, fontFamily, fontSize, charSpacing, lineHeight, text, underline, fill } =
-          item as IStaticText
+        const { textAlign, fontFamily, fontSize, charSpacing, lineHeight, underline, fill } = item as IStaticText
+        // @ts-ignore
+        let text = replaceParamWithValue(item as IStaticText, params)
 
         const textOptions = {
           ...baseOptions,

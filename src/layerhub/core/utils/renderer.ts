@@ -120,19 +120,12 @@ class Renderer {
     return elements
   }
 
-  private async loadTemplate(
-    staticCanvas: fabric.StaticCanvas,
-    template: IScene,
-    params: Record<string, string>
-  ) {
+  private async loadTemplate(staticCanvas: fabric.StaticCanvas, template: IScene, params: Record<string, string>) {
     const { frame } = template
     this.setDimensions(staticCanvas, frame)
     const objectImporter = new ObjectImporter()
-    // console.log(template.layers)
-    //
-    const updatedLayers = template.layers.filter(
-      (layer) => layer && layer.type !== LayerType.BACKGROUND_CONTAINER
-    )
+
+    const updatedLayers = template.layers.filter((layer) => layer && layer.type !== LayerType.BACKGROUND_CONTAINER)
 
     for (const layer of updatedLayers) {
       const element = await objectImporter.import(layer, params)
@@ -144,10 +137,7 @@ class Renderer {
     }
   }
 
-  private setDimensions(
-    staticCanvas: fabric.StaticCanvas,
-    { width, height }: { width: number; height: number }
-  ) {
+  private setDimensions(staticCanvas: fabric.StaticCanvas, { width, height }: { width: number; height: number }) {
     staticCanvas.setWidth(width).setHeight(height)
   }
 }

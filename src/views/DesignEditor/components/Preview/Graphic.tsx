@@ -1,7 +1,6 @@
 import React from "react"
 import { Block } from "baseui/block"
-import useDesignEditorScenes from "~/hooks/useDesignEditorScenes"
-import { Renderer, useEditor, useScenes } from "@layerhub-pro/react"
+import { Renderer, useDesign } from "@layerhub-pro/react"
 import { IScene } from "@layerhub-pro/types"
 import { motion, AnimatePresence } from "framer-motion"
 import { wrap } from "popmotion"
@@ -37,12 +36,9 @@ const swipePower = (offset: number, velocity: number) => {
 
 export default function ({ params }: { params: Record<string, string> }) {
   const [[page, direction], setPage] = React.useState([0, 0])
-
   const [slides, setSlides] = React.useState<string[]>([])
-  const scenes = useScenes()
-  const editor = useEditor()
   const [loading, setLoading] = React.useState(true)
-
+  const design = useDesign()
   const imageIndex = wrap(0, slides.length, page)
 
   const paginate = (newDirection: number) => {
@@ -61,23 +57,16 @@ export default function ({ params }: { params: Record<string, string> }) {
       setSlides(slides)
       setLoading(false)
     },
-    [editor]
+    [design]
   )
 
   React.useEffect(() => {
-    // console.log("LOADING")
-    if (scenes) {
-      const scenesJson = scenes.map((scn) => scn.toJSON())
-      // const currentScene = editor.scene.exportToJSON()
-      // const updatedScenes = scenes.map((scene) => {
-      //   if (scene.id === currentScene.id) {
-      //     return currentScene
-      //   }
-      //   return scene
-      // })
-      loadScenes(scenesJson)
+    if (design) {
+      const designJson = design.toJSON()
+
+      loadScenes(designJson.scenes)
     }
-  }, [scenes])
+  }, [design])
 
   return (
     <Block

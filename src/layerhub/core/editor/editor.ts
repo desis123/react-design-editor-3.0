@@ -60,8 +60,8 @@ export class Editor extends EventManager {
       // @ts-ignore
       const design = createDesign({
         frame: {
-          width: 1080,
-          height: 1920,
+          width: 1920,
+          height: 1080,
         },
       })
       // const design = data as IDesign

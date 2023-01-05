@@ -1,7 +1,6 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useRef } from "react"
 import ResizeObserver from "resize-observer-polyfill"
 import useAppContext from "~/hooks/useAppContext"
-import Loading from "./components/Loading"
 import { editorFonts } from "./constants/fonts"
 import { getPublicComponents } from "./store/slices/components/actions"
 import { getPublicDesigns } from "./store/slices/designs/actions"

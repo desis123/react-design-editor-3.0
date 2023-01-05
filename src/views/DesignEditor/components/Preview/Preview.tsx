@@ -4,10 +4,8 @@ import { Block } from "baseui/block"
 import Video from "./Video"
 import Presentation from "./Presentation"
 import Graphic from "./Graphic"
-import useDesignEditorScenes from "~/hooks/useDesignEditorScenes"
-import { useEditor } from "@layerhub-pro/react"
+import { useDesign } from "@layerhub-pro/react"
 import { getTokens } from "../../utils/get-tokens"
-import useDesignEditorContext from "~/hooks/useDesignEditorContext"
 import Preparing from "./Preparing"
 import FillProps from "./FillProps"
 
@@ -19,10 +17,7 @@ interface ComponentProps {
 export default function ({ isOpen, setIsOpen }: ComponentProps) {
   const [params, setParams] = React.useState<Record<string, string>>({})
   const [previewStep, setPreviewStep] = React.useState<PreviewStep>("PREPARING")
-  // const { currentDesign } = useDesignEditorContext()
-  const scenes = useDesignEditorScenes()
-  const editor = useEditor()
-
+  const design = useDesign()
   const updateParams = (key: string, value: string) => {
     setParams({
       ...params,
@@ -31,32 +26,22 @@ export default function ({ isOpen, setIsOpen }: ComponentProps) {
   }
 
   React.useEffect(() => {
-    if (scenes && editor) {
-      applyParams()
-      // const currentScene = editor.scene.exportToJSON()
-      // const updatedScenes = scenes.map((scene) => {
-      //   if (scene.id === currentScene.id) {
-      //     return currentScene
-      //   }
-      //   return scene
-      // })
-      // const tokens = getTokens({ ...currentDesign, scenes: updatedScenes })
-
-      // if (tokens.length) {
-      //   let params: Record<string, string> = {}
-      //   tokens.forEach((token) => {
-      //     params[token.name] = ""
-      //   })
-      //   setParams(params)
-      //   setPreviewStep("FILL_PROPS")
-      // } else {
-      //   applyParams()
-      // }
+    if (design) {
+      const tokens = getTokens(design.toJSON())
+      if (tokens.length) {
+        let params: Record<string, string> = {}
+        tokens.forEach((token) => {
+          params[token.name] = ""
+        })
+        setParams(params)
+        setPreviewStep("FILL_PROPS")
+      } else {
+        applyParams()
+      }
     }
-  }, [editor, scenes])
+  }, [design])
 
   const applyParams = () => {
-    // setPreviewStep(currentDesign.type as "GRAPHIC")
     setPreviewStep("GRAPHIC")
   }
 
