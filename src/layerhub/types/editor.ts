@@ -17,7 +17,7 @@ export interface IConfig {
   }
   background: {
     color: string
-    shadow: fabric.IShadowOptions
+    shadow: any
   }
 }
 

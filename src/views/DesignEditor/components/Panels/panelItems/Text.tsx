@@ -1,11 +1,10 @@
 import React from "react"
 import { Button, SIZE } from "baseui/button"
-import { textComponents } from "~/constants/editor"
 import { useStyletron } from "styletron-react"
 import { useActiveScene, useEditor } from "@layerhub-pro/react"
 import { FontItem } from "~/interfaces/common"
 import { loadFonts } from "~/utils/fonts"
-import { ILayer, IStaticText } from "@layerhub-pro/types"
+import { ILayer } from "@layerhub-pro/types"
 import { nanoid } from "nanoid"
 import { Block } from "baseui/block"
 import AngleDoubleLeft from "~/components/Icons/AngleDoubleLeft"
@@ -14,21 +13,6 @@ import useSetIsSidebarOpen from "~/hooks/useSetIsSidebarOpen"
 import { useSelector } from "react-redux"
 import { selectPublicComponents } from "~/store/slices/components/selectors"
 import api from "~/services/api"
-
-const textOptions = {
-  id: nanoid(),
-  type: "StaticText",
-  width: 420,
-  text: "Add some text",
-  fontSize: 92,
-  fontFamily: "OpenSans-Regular",
-  textAlign: "center",
-  fontStyle: "normal",
-  fontURL:
-    "https://fonts.gstatic.com/s/opensans/v27/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0C4nY1M2xLER.ttf",
-  fill: "#333333",
-  metadata: {},
-}
 
 export default function () {
   const editor = useEditor()
@@ -58,67 +42,14 @@ export default function () {
       scene.objects.add(options)
     }
   }
-  const addComponent = async (component: any) => {
-    if (scene) {
-      const fontItemsList: FontItem[] = []
-      if (component.objects) {
-        component.objects.forEach((object: any) => {
-          if (object.type === "StaticText" || object.type === "DynamicText") {
-            fontItemsList.push({
-              name: object.fontFamily,
-              url: object.fontURL,
-            })
-          }
-        })
-        const filteredFonts = fontItemsList.filter((f) => !!f.url)
-        await loadFonts(filteredFonts)
-      } else {
-        if (component.type === "StaticText" || component.type === "DynamicText") {
-          fontItemsList.push({
-            name: component.fontFamily,
-            url: component.fontURL,
-          })
-          await loadFonts(fontItemsList)
-        }
-      }
-      scene.objects.add(component)
-    }
-  }
 
   const makeAddComponent = async (id: string) => {
     if (editor) {
-      // const component = await api.getComponentById(id)
-      // const fontItemsList: FontItem[] = []
-      // const object: any = component.layers[0] as ILayer
-      // if (object.type === "Group") {
-      //   object.objects.forEach((object: any) => {
-      //     if (object.type === "StaticText" || object.type === "DynamicText") {
-      //       fontItemsList.push({
-      //         name: object.fontFamily,
-      //         url: object.fontURL,
-      //       })
-      //     }
-      //   })
-      //   const filteredFonts = fontItemsList.filter((f) => !!f.url)
-      //   await loadFonts(filteredFonts)
-      // } else {
-      //   if (object.type === "StaticText") {
-      //     fontItemsList.push({
-      //       name: object.fontFamily,
-      //       url: object.fontURL,
-      //     })
-      //     await loadFonts(fontItemsList)
-      //   }
-      // }
-      // editor.objects.add(object)
-    }
-  }
-
-  const loadComponentFonts = async (component: any) => {
-    if (editor) {
+      const component = await api.getPublicComponentById(id)
       const fontItemsList: FontItem[] = []
-      if (component.objects) {
-        component.objects.forEach((object: any) => {
+      const object: any = component.layers[0] as ILayer
+      if (object.type === "Group") {
+        object.objects.forEach((object: any) => {
           if (object.type === "StaticText" || object.type === "DynamicText") {
             fontItemsList.push({
               name: object.fontFamily,
@@ -129,14 +60,15 @@ export default function () {
         const filteredFonts = fontItemsList.filter((f) => !!f.url)
         await loadFonts(filteredFonts)
       } else {
-        if (component.type === "StaticText" || component.type === "DynamicText") {
+        if (object.type === "StaticText") {
           fontItemsList.push({
-            name: component.fontFamily,
-            url: component.fontURL,
+            name: object.fontFamily,
+            url: object.fontURL,
           })
           await loadFonts(fontItemsList)
         }
       }
+      scene.objects.add(object)
     }
   }
 

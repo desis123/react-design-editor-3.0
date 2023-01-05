@@ -44,6 +44,7 @@ class CanvasEvents {
       "background:selected": this.onBackgroundSelected,
       "crop:started": this.onCropStarted,
       "crop:finished": this.onCropFinished,
+      "param:selected": this.onParamSelected,
     })
 
     this.canvas.wrapperEl.addEventListener("keydown", this.onKeyDown.bind(this), false)
@@ -61,6 +62,7 @@ class CanvasEvents {
       "background:selected": this.onBackgroundSelected,
       "crop:started": this.onCropStarted,
       "crop:finished": this.onCropFinished,
+      "param:selected": this.onParamSelected,
     })
 
     this.canvas.wrapperEl.removeEventListener("keydown", this.onKeyDown.bind(this))
@@ -78,6 +80,10 @@ class CanvasEvents {
     // @ts-ignore
     this.canvas.isCropping = false
     this.editor.state.setIsCropping(false)
+  }
+
+  private onParamSelected = (event: any) => {
+    this.editor.state.setParamMenuRequest(event)
   }
 
   private onKeyDown(event: KeyboardEvent) {
