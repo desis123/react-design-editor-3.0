@@ -1,25 +1,14 @@
 import React from "react"
 import { Block } from "baseui/block"
 import useDesignEditorContext from "~/hooks/useDesignEditorContext"
-import { nanoid } from "nanoid"
 import useOnClickOutside from "~/hooks/useOnClickOutside"
-import { getDefaultTemplate } from "~/constants/design-editor"
-import { useDesign, useEditor, useFrame } from "@layerhub-pro/react"
-import { IScene } from "@layerhub-pro/types"
+import { useDesign } from "@layerhub-pro/react"
 
 export default function () {
-  const {
-    scenes,
-    setScenes,
-    setContextMenuTimelineRequest,
-    contextMenuTimelineRequest,
-    setCurrentScene,
-    setCurrentDesign,
-  } = useDesignEditorContext()
+  const { scenes, setScenes, setContextMenuTimelineRequest, contextMenuTimelineRequest } = useDesignEditorContext()
   const ref = React.useRef<HTMLDivElement | null>(null)
   const design = useDesign()
-  const editor = useEditor()
-  const frame = useFrame()
+
   useOnClickOutside(ref, () => {
     setContextMenuTimelineRequest({ ...contextMenuTimelineRequest, visible: false })
   })
@@ -29,60 +18,40 @@ export default function () {
     left: 0,
   }
 
-  const makeDeleteScene = async () => {
-    const updatedScenes = scenes.filter((scene) => scene.id !== contextMenuTimelineRequest.id)
-
+  const makeDeleteScene = async (id: string) => {
+    // const updatedScenes = scenes.filter((scene) => scene.id !== contextMenuTimelineRequest.id)
+    design?.deleteScene(id)
     setContextMenuTimelineRequest({ ...contextMenuTimelineRequest, visible: false })
-    if (updatedScenes[0]) {
-      setScenes(updatedScenes)
-    } else {
-      // const defaultTemplate = getDefaultTemplate({
-      //   width: frame.width,
-      //   height: frame.height,
-      // })
-      // await editor.scene.importFromJSON(defaultTemplate)
-      // setCurrentDesign({
-      //   id: nanoid(),
-      //   frame: defaultTemplate.frame,
-      //   metadata: {},
-      //   name: "Untitled Design",
-      //   previews: [],
-      //   scenes: [],
-      //   type: "VIDEO",
-      // })
-      // const initialDesign = editor.scene.exportToJSON() as any
-      // const preview = await renderer.render(initialDesign, {})
-      // setCurrentScene({ ...initialDesign, preview: preview, duration: 5000 })
-      // setScenes([{ ...initialDesign, preview: preview, duration: 5000 }])
-    }
+    // if (updatedScenes[0]) {
+    //   setScenes(updatedScenes)
+    // } else {
+    //   // const defaultTemplate = getDefaultTemplate({
+    //   //   width: frame.width,
+    //   //   height: frame.height,
+    //   // })
+    //   // await editor.scene.importFromJSON(defaultTemplate)
+    //   // setCurrentDesign({
+    //   //   id: nanoid(),
+    //   //   frame: defaultTemplate.frame,
+    //   //   metadata: {},
+    //   //   name: "Untitled Design",
+    //   //   previews: [],
+    //   //   scenes: [],
+    //   //   type: "VIDEO",
+    //   // })
+    //   // const initialDesign = editor.scene.exportToJSON() as any
+    //   // const preview = await renderer.render(initialDesign, {})
+    //   // setCurrentScene({ ...initialDesign, preview: preview, duration: 5000 })
+    //   // setScenes([{ ...initialDesign, preview: preview, duration: 5000 }])
+    // }
   }
 
   const makeAddScene = () => {}
 
   const makeDuplicateScene = async () => {
     design?.duplicateScene()
-    // UPDATE ALL SCENES
-    // const currentScene = editor.scene.exportToJSON()
-    // const updatedScenes: IScene[] = []
-    // for (const scene of scenes) {
-    //   if (scene.id === currentScene.id) {
-    //     const preview = (await renderer.render(currentScene, {})) as string
-    //     updatedScenes.push({ ...currentScene, preview: preview })
-    //   } else {
-    //     updatedScenes.push(scene)
-    //   }
-    // }
-    // // FIND SCENE TO BE DUPLICATED
-    // const duplicateScenePayload = updatedScenes.find((scene) => scene.id === contextMenuTimelineRequest.id)
-    // // CLONE JSON FOR SCENE TO BE DUPLICATED AND ASSING NEW ID FOR SCENE TO BE DUPLICATED
-    // const newScene = { ...duplicateScenePayload, id: nanoid() } as IScene
-    // // ADD NEW SCENE TO SCENES
-    // const updatedScenesWithPayload = [...updatedScenes, newScene]
-    // setScenes(updatedScenesWithPayload)
-    // setCurrentScene(newScene)
-    // setContextMenuTimelineRequest({ ...contextMenuTimelineRequest, visible: false })
+    setContextMenuTimelineRequest({ ...contextMenuTimelineRequest, visible: false })
   }
-  console.log({ contextMenuTimelineRequest })
 
   return (
     <Block
@@ -93,8 +62,8 @@ export default function () {
         backgroundColor: "#ffffff",
         boxShadow: "0 0 0 1px rgba(64,87,109,0.07),0 2px 12px rgba(53,71,90,0.2)",
         zIndex: 4,
-        top: `${-0}px`,
-        left: `${60}px`,
+        top: `${-4}px`,
+        left: `${contextMenuTimelineRequest.left - timelineItemsContainerBounds.left}px`,
         padding: "0.5rem 0",
       }}
     >
@@ -102,7 +71,7 @@ export default function () {
         onClick={makeDuplicateScene}
         $style={{
           fontSize: "14px",
-          height: "28px",
+          height: "24px",
           display: "flex",
           alignItems: "center",
           padding: "0 1rem",
@@ -112,13 +81,13 @@ export default function () {
           },
         }}
       >
-        Duplicate Scene
+        Duplicate
       </Block>
       <Block
-        onClick={makeDeleteScene}
+        onClick={() => makeDeleteScene(contextMenuTimelineRequest.id)}
         $style={{
           fontSize: "14px",
-          height: "28px",
+          height: "24px",
           display: "flex",
           alignItems: "center",
           padding: "0 1rem",
@@ -128,7 +97,7 @@ export default function () {
           },
         }}
       >
-        Delete Scene
+        Delete
       </Block>
     </Block>
   )

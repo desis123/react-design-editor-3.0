@@ -116,11 +116,25 @@ class Design {
     this.setOne(scene)
     this.setActiveScene(scene)
   }
+  public async deleteScene(id: string) {
+    const isActive = this.activeScene.id === id
+    this.unsetOne(id)
+    if (isActive) {
+      const currentIndex = this.scenes.findIndex((scene) => scene.id === id)
+      const newActiveIndex = Math.max(currentIndex, 0)
+      const newActiveScene = this.scenes[newActiveIndex]
+      this.setActiveScene(newActiveScene)
+    }
+  }
   public setOne(scene: Scene) {
     this.scenes.push(scene)
     this.updateContext()
   }
 
+  public unsetOne(id: string) {
+    this.scenes = this.scenes.filter((scene) => scene.id !== id)
+    this.updateContext()
+  }
   public setMany(scenes: Scene[]) {
     this.scenes = scenes
     this.updateContext()
