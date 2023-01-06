@@ -1,11 +1,11 @@
 import React from "react"
+import { useDesign } from "@layerhub-pro/react"
 import { Block } from "baseui/block"
 import useDesignEditorContext from "~/hooks/useDesignEditorContext"
 import useOnClickOutside from "~/hooks/useOnClickOutside"
-import { useDesign } from "@layerhub-pro/react"
 
 export default function () {
-  const { scenes, setScenes, setContextMenuTimelineRequest, contextMenuTimelineRequest } = useDesignEditorContext()
+  const { setContextMenuTimelineRequest, contextMenuTimelineRequest } = useDesignEditorContext()
   const ref = React.useRef<HTMLDivElement | null>(null)
   const design = useDesign()
 
@@ -19,34 +19,9 @@ export default function () {
   }
 
   const makeDeleteScene = async (id: string) => {
-    // const updatedScenes = scenes.filter((scene) => scene.id !== contextMenuTimelineRequest.id)
     design?.deleteScene(id)
     setContextMenuTimelineRequest({ ...contextMenuTimelineRequest, visible: false })
-    // if (updatedScenes[0]) {
-    //   setScenes(updatedScenes)
-    // } else {
-    //   // const defaultTemplate = getDefaultTemplate({
-    //   //   width: frame.width,
-    //   //   height: frame.height,
-    //   // })
-    //   // await editor.scene.importFromJSON(defaultTemplate)
-    //   // setCurrentDesign({
-    //   //   id: nanoid(),
-    //   //   frame: defaultTemplate.frame,
-    //   //   metadata: {},
-    //   //   name: "Untitled Design",
-    //   //   previews: [],
-    //   //   scenes: [],
-    //   //   type: "VIDEO",
-    //   // })
-    //   // const initialDesign = editor.scene.exportToJSON() as any
-    //   // const preview = await renderer.render(initialDesign, {})
-    //   // setCurrentScene({ ...initialDesign, preview: preview, duration: 5000 })
-    //   // setScenes([{ ...initialDesign, preview: preview, duration: 5000 }])
-    // }
   }
-
-  const makeAddScene = () => {}
 
   const makeDuplicateScene = async () => {
     design?.duplicateScene()

@@ -1,10 +1,8 @@
-import { fabric } from "fabric"
 import { IConfig, IDesign } from "@layerhub-pro/types"
 import { FabricCanvas, IState } from "../common/interfaces"
 import { Editor } from "../editor/editor"
 import Scene from "./scene"
 import { createScene } from "../utils/design"
-import { nanoid } from "nanoid"
 
 interface DesignOptions {
   canvas: FabricCanvas
@@ -56,7 +54,8 @@ class Design {
     await Promise.all(scenes.map((scene) => scene.prerender()))
     await Promise.all(scenes.map((scene) => scene.setPreviewDefault()))
 
-    this.setMany(scenes)
+    this.scenes = scenes
+    this.updateContext()
     this.setActiveScene(scenes[0])
   }
 
@@ -84,19 +83,9 @@ class Design {
   }
 
   public async addScene() {
-    const emptyScene = createScene({ frame: this.design.frame })
-    const scene = new Scene({
-      scene: emptyScene,
-      canvas: this.canvas,
-      config: this.config,
-      editor: this.editor,
-      state: this.state,
-    })
-
-    await scene.prerender()
-    await scene.setPreviewDefault()
-
-    this.setOne(scene)
+    const scene = await this.createScene()
+    this.scenes.push(scene)
+    this.updateContext()
     this.setActiveScene(scene)
   }
 
@@ -113,31 +102,42 @@ class Design {
     await scene.prerender()
     await scene.setPreviewDefault()
 
-    this.setOne(scene)
-    this.setActiveScene(scene)
-  }
-  public async deleteScene(id: string) {
-    const isActive = this.activeScene.id === id
-    this.unsetOne(id)
-    if (isActive) {
-      const currentIndex = this.scenes.findIndex((scene) => scene.id === id)
-      const newActiveIndex = Math.max(currentIndex, 0)
-      const newActiveScene = this.scenes[newActiveIndex]
-      this.setActiveScene(newActiveScene)
-    }
-  }
-  public setOne(scene: Scene) {
     this.scenes.push(scene)
     this.updateContext()
+    this.setActiveScene(scene)
   }
 
-  public unsetOne(id: string) {
-    this.scenes = this.scenes.filter((scene) => scene.id !== id)
-    this.updateContext()
+  public async createScene() {
+    const emptyScene = createScene({ frame: this.design.frame })
+    const scene = new Scene({
+      scene: emptyScene,
+      canvas: this.canvas,
+      config: this.config,
+      editor: this.editor,
+      state: this.state,
+    })
+
+    await scene.prerender()
+    await scene.setPreviewDefault()
+    return scene
   }
-  public setMany(scenes: Scene[]) {
-    this.scenes = scenes
-    this.updateContext()
+
+  public async deleteScene(id: string) {
+    const isActive = this.activeScene.id === id
+    this.scenes = this.scenes.filter((scene) => scene.id !== id)
+
+    if (!this.scenes.length) {
+      const scene = await this.createScene()
+      this.scenes = [scene]
+      this.setActiveScene(scene)
+    } else {
+      if (isActive) {
+        const currentIndex = this.scenes.findIndex((scene) => scene.id === id)
+        const newActiveIndex = Math.max(currentIndex, 0)
+        const newActiveScene = this.scenes[newActiveIndex]
+        this.setActiveScene(newActiveScene)
+      }
+    }
   }
 
   public updateContext() {
