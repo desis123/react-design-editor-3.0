@@ -1,4 +1,5 @@
 import { IFrame } from "@layerhub-pro/types"
+import { nanoid } from "nanoid"
 import { defaultObjects } from "../constants/defaults"
 
 export const createDesign = (options?: { frame?: Partial<IFrame> }) => {
@@ -15,6 +16,7 @@ export const createScene = (options: { frame: Partial<IFrame> }) => {
   const background = createBackground({ frame })
   const initial = { ...defaultObjects["SCENE"] }
   return Object.assign({}, initial, {
+    id: nanoid(),
     layers: [background],
     frame,
   })

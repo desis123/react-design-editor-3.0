@@ -29,10 +29,8 @@ function ContextMenu() {
           layers: [component],
           metadata: {},
         }
-        console.log(design)
         const renderer = new Renderer()
         const preview = await renderer.render(design, {})
-        console.log(preview)
       }
     }
   }

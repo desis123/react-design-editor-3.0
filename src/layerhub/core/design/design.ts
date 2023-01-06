@@ -3,6 +3,7 @@ import { FabricCanvas, IState } from "../common/interfaces"
 import { Editor } from "../editor/editor"
 import Scene from "./scene"
 import { createScene } from "../utils/design"
+import { nanoid } from "nanoid"
 
 interface DesignOptions {
   canvas: FabricCanvas
@@ -91,7 +92,7 @@ class Design {
 
   public async duplicateScene() {
     const currentScene = this.activeScene.toJSON()
-
+    currentScene.id = nanoid()
     const scene = new Scene({
       scene: currentScene,
       canvas: this.canvas,
@@ -124,20 +125,20 @@ class Design {
 
   public async deleteScene(id: string) {
     const isActive = this.activeScene.id === id
+    const currentIndex = this.scenes.findIndex((scene) => scene.id === id)
     this.scenes = this.scenes.filter((scene) => scene.id !== id)
-
     if (!this.scenes.length) {
       const scene = await this.createScene()
       this.scenes = [scene]
       this.setActiveScene(scene)
     } else {
       if (isActive) {
-        const currentIndex = this.scenes.findIndex((scene) => scene.id === id)
-        const newActiveIndex = Math.max(currentIndex, 0)
+        const newActiveIndex = Math.max(currentIndex - 1, 0)
         const newActiveScene = this.scenes[newActiveIndex]
         this.setActiveScene(newActiveScene)
       }
     }
+    this.updateContext()
   }
 
   public updateContext() {

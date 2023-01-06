@@ -41,7 +41,7 @@ class Scene {
   public background: Background
 
   constructor(options: SceneOptions) {
-    this.id = nanoid()
+    this.id = options.scene.id ? options.scene.id : nanoid()
     this.layers = []
 
     this.config = options.config
