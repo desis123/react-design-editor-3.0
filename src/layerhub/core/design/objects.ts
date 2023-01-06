@@ -169,6 +169,7 @@ class Objects {
     const canvas = this.scene.canvas
     console.log(canvas.getActiveObject() as any)
   }
+
   public updateEffect = (options: Partial<EffectGeneratorOptions>, id?: string) => {
     const canvas = this.scene.canvas
     let refObject = canvas.getActiveObject() as any
@@ -456,6 +457,19 @@ class Objects {
       refObject.text = text!.toUpperCase()
       canvas.requestRenderAll()
     }
+  }
+
+  public updateLayerColor(prev: string, next: string, id?: string) {
+    const canvas = this.scene.canvas
+    let refObject = canvas.getActiveObject() as unknown as fabric.StaticVector
+    if (id) {
+      refObject = this.findOneById(id)
+    }
+    if (refObject.type === LayerType.STATIC_VECTOR) {
+      refObject.updateLayerColor(prev, next)
+    }
+    canvas.requestRenderAll()
+    this.scene.history.save()
   }
 
   // Text exclusive hooks

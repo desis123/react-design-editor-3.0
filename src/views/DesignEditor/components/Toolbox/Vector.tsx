@@ -2,7 +2,7 @@ import React from "react"
 import { Block } from "baseui/block"
 import { HexColorPicker } from "react-colorful"
 import Common from "./Common"
-import { useActiveObject } from "@layerhub-pro/react"
+import { useActiveObject, useActiveScene } from "@layerhub-pro/react"
 import { groupBy } from "lodash"
 import { PLACEMENT, StatefulPopover } from "baseui/popover"
 import Flip from "./Shared/Flip"
@@ -11,6 +11,7 @@ export default function () {
   const [state, setState] = React.useState<any>({ colors: [], colorMap: {} })
   const vectorPaths = React.useRef<any>({})
   const activeObject = useActiveObject() as any
+  const activeScene = useActiveScene()
 
   React.useEffect(() => {
     if (activeObject && activeObject.type === "StaticVector") {
@@ -21,9 +22,8 @@ export default function () {
     }
   }, [activeObject])
 
-  const changeBackgroundColor = (prev: string, next: string) => {
-    const objectRef = activeObject
-    objectRef.updateLayerColor(prev, next)
+  const changeLayerColor = (prev: string, next: string) => {
+    activeScene.objects.updateLayerColor(prev, next)
     setState({
       ...state,
       colorMap: {
@@ -65,7 +65,7 @@ export default function () {
                     >
                       <HexColorPicker
                         onChange={(color) => {
-                          changeBackgroundColor(c, color)
+                          changeLayerColor(c, color)
                         }}
                       />
                     </div>
