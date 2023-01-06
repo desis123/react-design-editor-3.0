@@ -25,7 +25,7 @@ interface ImportOptions {
 
 const ObjectTypes = {
   StaticImage: "image",
-  Group: "group",
+  group: "group",
   StaticPath: "path",
   StaticText: "text",
   StaticVideo: "video",

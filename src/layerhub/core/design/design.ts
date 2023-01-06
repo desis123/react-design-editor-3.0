@@ -4,6 +4,7 @@ import { FabricCanvas, IState } from "../common/interfaces"
 import { Editor } from "../editor/editor"
 import Scene from "./scene"
 import { createScene } from "../utils/design"
+import { nanoid } from "nanoid"
 
 interface DesignOptions {
   canvas: FabricCanvas
@@ -84,7 +85,6 @@ class Design {
 
   public async addScene() {
     const emptyScene = createScene({ frame: this.design.frame })
-    console.log({ emptyScene })
     const scene = new Scene({
       scene: emptyScene,
       canvas: this.canvas,
@@ -102,9 +102,19 @@ class Design {
 
   public async duplicateScene() {
     const currentScene = this.activeScene.toJSON()
-    // const current
-    // fabric.util.object.clone()
-    console.log({ currentScene })
+
+    const scene = new Scene({
+      scene: currentScene,
+      canvas: this.canvas,
+      config: this.config,
+      editor: this.editor,
+      state: this.state,
+    })
+    await scene.prerender()
+    await scene.setPreviewDefault()
+
+    this.setOne(scene)
+    this.setActiveScene(scene)
   }
   public setOne(scene: Scene) {
     this.scenes.push(scene)

@@ -21,11 +21,12 @@ interface SceneOptions {
   config: IConfig
   editor: Editor
   state: IState
+  layers?: fabric.Object[]
 }
 class Scene {
   public id: string
   public objects: ObjectsManager
-  private layers: fabric.Object[]
+  public layers: fabric.Object[]
   private scene: IScene
   public canvas: FabricCanvas
   public frame: fabric.Frame
@@ -38,6 +39,7 @@ class Scene {
   public history: History
   public cropObject: any
   public background: Background
+
   constructor(options: SceneOptions) {
     this.id = nanoid()
     this.layers = []
@@ -47,6 +49,8 @@ class Scene {
     this.canvas = options.canvas
     this.state = options.state
     this.scene = options.scene
+
+    if (options.layers) this.layers = options.layers
 
     this.renderer = new Renderer()
     this.history = new History(this)
@@ -74,7 +78,7 @@ class Scene {
     await this.preloadObjects()
   }
 
-  private removeCanvasObjects() {
+  public removeCanvasObjects() {
     this.canvas.remove(...this.canvas.getObjects())
   }
 
@@ -255,11 +259,13 @@ class Scene {
       promiseObjects.push(importedObject as any)
     }
     const loadedObjects = await Promise.all(promiseObjects)
+
     for (const loadedObject of loadedObjects) {
       if (!this.config.outsideVisible) {
         loadedObject.clipPath = this.frame
       }
     }
+
     this.layers = loadedObjects
   }
 
@@ -269,6 +275,7 @@ class Scene {
     this.canvas.add(this.frame, ...this.layers)
     this.canvas.requestRenderAll()
     this.history.setCurrent()
+    this.objects.updateContextObjects()
   }
 
   public async loadObjects() {

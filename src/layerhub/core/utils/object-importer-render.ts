@@ -36,7 +36,6 @@ class ObjectImporter {
       case LayerType.STATIC_PATH:
         object = await this.staticPath(item)
         break
-
       case LayerType.LINE:
         object = await this.line(item)
         break
@@ -56,10 +55,8 @@ class ObjectImporter {
       case LayerType.BACKGROUND:
         object = await this.background(item)
         break
-      // case LayerType.PLACEHOLDER:
-      //   object = await this.placeholder(item);
-      //   break;
       case LayerType.GROUP:
+      case "group":
         object = await this.group(item, params)
         break
     }

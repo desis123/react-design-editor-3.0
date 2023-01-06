@@ -1005,8 +1005,6 @@ class Objects {
     }
 
     activeObject.toGroup()
-    canvas.requestRenderAll()
-    this.scene.history.save()
 
     const groupedActiveObject = canvas.getActiveObject()
     // @ts-ignore
@@ -1017,6 +1015,12 @@ class Objects {
       subTargetCheck: true,
       clipPath: this.scene.config.outsideVisible ? null : frame,
     })
+    groupedActiveObject?._objects?.forEach((o) => {
+      o.clipPath = null
+    })
+
+    canvas.requestRenderAll()
+    this.scene.history.save()
     this.updateContextObjects()
   }
 
