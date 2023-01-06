@@ -806,7 +806,6 @@ class Objects {
     if (canvas) {
       const activeObject = canvas.getActiveObject()
       canvas.discardActiveObject()
-
       this.duplicate(activeObject!, frame, (duplicates) => {
         const selection = new fabric.ActiveSelection(duplicates, {
           canvas: canvas,
@@ -843,22 +842,19 @@ class Objects {
         })
       }
     } else {
-      object.clone(
-        (clone: fabric.Object) => {
-          clone.clipPath = undefined
-          clone.id = nanoid()
-          clone.set({
-            left: object.left! + 10,
-            top: object.top! + 10,
-          })
-          if (!this.scene.config.outsideVisible) {
-            clone.clipPath = frame
-          }
-          canvas.add(clone)
-          callback([clone])
-        },
-        ["keyValues", "src"]
-      )
+      object.clone((clone: fabric.Object) => {
+        clone.clipPath = undefined
+        clone.id = nanoid()
+        clone.set({
+          left: object.left! + 10,
+          top: object.top! + 10,
+        })
+        if (!this.scene.config.outsideVisible) {
+          clone.clipPath = frame
+        }
+        canvas.add(clone)
+        callback([clone])
+      }, this.scene.config.properties)
     }
   }
 
@@ -919,13 +915,36 @@ class Objects {
     if (object) {
       const canvas = this.scene.canvas
       const frame = this.scene.frame
+      const isGroup = object.type === "group"
+
       canvas.discardActiveObject()
+
       this.duplicate(object, frame, (duplicates) => {
+        duplicates.forEach((duplicate) => {
+          duplicate.clipPath = null
+        })
+
         const selection = new fabric.ActiveSelection(duplicates, {
           canvas: canvas,
         }) as fabric.Object
+        if (isGroup) {
+          // @ts-ignore
+          const group = selection.toGroup()
+          group.set({
+            name: "group",
+            id: nanoid(),
+            // @ts-ignore
+            subTargetCheck: true,
+            clipPath: this.scene.config.outsideVisible ? null : frame,
+            top: object.top + 50,
+            left: object.top + 50,
+          })
+          group.setCoords()
+        }
+
         canvas.setActiveObject(selection)
         canvas.requestRenderAll()
+
         this.updateContextObjects()
       })
     }
