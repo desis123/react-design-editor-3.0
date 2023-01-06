@@ -863,19 +863,24 @@ class Objects {
    */
   public remove = (id?: string) => {
     const canvas = this.scene.canvas
-    let refObject = canvas.getActiveObjects()
+    let refObject = canvas.getActiveObject()
 
     if (id) {
       refObject = this.findOneById(id)
     }
 
     if (refObject) {
+      // @ts-ignore
       if (isArray(refObject)) {
         refObject.forEach((obj) => {
-          canvas.remove(obj)
+          if (refObject?.type !== "Frame") {
+            canvas.remove(obj)
+          }
         })
       } else {
-        canvas.remove(refObject)
+        if (refObject?.type !== "Frame") {
+          canvas.remove(refObject)
+        }
       }
 
       canvas.discardActiveObject().renderAll()
