@@ -1,6 +1,5 @@
 import TextProperties from "./TextProperties"
 import Text from "./Text"
-import Customize from "./Customize"
 import FontSelector from "./FontSelector"
 import Pixabay from "./Pixabay"
 import Templates from "./Templates"
@@ -19,7 +18,6 @@ import Background from "./Background"
 export default {
   StaticText: TextProperties,
   Text: Text,
-  Customize: Customize,
   FontSelector: FontSelector,
   Pixabay: Pixabay,
   Templates: Templates,

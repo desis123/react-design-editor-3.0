@@ -16,6 +16,8 @@ interface ISceneEditorContext {
   setEditorType: React.Dispatch<React.SetStateAction<DesignType>>
   displayPlayback: boolean
   setDisplayPlayback: React.Dispatch<React.SetStateAction<boolean>>
+  displayResize: boolean
+  setDisplayResize: React.Dispatch<React.SetStateAction<boolean>>
   displayPreview: boolean
   setDisplayPreview: React.Dispatch<React.SetStateAction<boolean>>
   currentPreview: string
@@ -58,6 +60,8 @@ export const DesignEditorContext = React.createContext<ISceneEditorContext>({
   setDisplayPlayback: () => {},
   displayPreview: false,
   setDisplayPreview: () => {},
+  displayResize: false,
+  setDisplayResize: () => {},
   setCurrentPreview: () => {},
   currentPreview: "",
   maxTime: 0,
@@ -101,6 +105,7 @@ export const DesignEditorProvider = ({ children }: { children: React.ReactNode }
   const [editorType, setEditorType] = React.useState<DesignType>("NONE")
   const [displayPlayback, setDisplayPlayback] = React.useState<boolean>(false)
   const [displayPreview, setDisplayPreview] = React.useState<boolean>(false)
+  const [displayResize, setDisplayResize] = React.useState<boolean>(false)
   const [currentPreview, setCurrentPreview] = React.useState<string>("")
   const [maxTime, setMaxTime] = React.useState(5000)
   const [designEditorLoading, setDesignEditorLoading] = React.useState<{
@@ -141,6 +146,8 @@ export const DesignEditorProvider = ({ children }: { children: React.ReactNode }
     toggleFullScreen,
     designEditorLoading,
     setDesignEditorLoading,
+    displayResize,
+    setDisplayResize,
   }
   return <DesignEditorContext.Provider value={context}>{children}</DesignEditorContext.Provider>
 }

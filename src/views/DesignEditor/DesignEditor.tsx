@@ -8,6 +8,7 @@ import useDesignEditorContext from "~/hooks/useDesignEditorContext"
 import Preview from "./components/Preview"
 import { Block } from "baseui/block"
 import { useFullscreen } from "react-use"
+import Resize from "./components/Resize"
 
 function DesignEditor() {
   const editorType = useEditorType()
@@ -20,7 +21,7 @@ function DesignEditor() {
   return (
     <Block ref={ref}>
       {displayPreview && <Preview isOpen={displayPreview} setIsOpen={setDisplayPreview} />}
-
+      <Resize />
       {
         {
           NONE: <SelectEditor />,

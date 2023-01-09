@@ -21,7 +21,7 @@ const Container = styled<"div", {}, Theme>("div", ({ $theme }) => ({
 }))
 
 export default function () {
-  const { setDisplayPreview } = useDesignEditorContext()
+  const { setDisplayPreview, setDisplayResize } = useDesignEditorContext()
   const design = useDesign()
   const editor = useEditor()
   const inputFileRef = React.useRef<HTMLInputElement>(null)
@@ -74,9 +74,23 @@ export default function () {
     // @ts-ignore
     <ThemeProvider theme={DarkTheme}>
       <Container>
-        <div style={{ color: "#ffffff" }}>
+        <Block $style={{ color: "#ffffff", display: "flex", alignItems: "center", gap: "1rem" }}>
           <Logo size={36} />
-        </div>
+          <Button
+            size="compact"
+            onClick={() => setDisplayResize(true)}
+            kind={KIND.tertiary}
+            overrides={{
+              StartEnhancer: {
+                style: {
+                  marginRight: "4px",
+                },
+              },
+            }}
+          >
+            Resize
+          </Button>
+        </Block>
         <DesignTitle />
         <Block $style={{ display: "flex", alignItems: "center", gap: "0.5rem", justifyContent: "flex-end" }}>
           <input

@@ -35,6 +35,7 @@ export default function () {
       <Canvas
         config={{
           margin: 140,
+          outsideVisible: false,
         }}
       />
     </div>

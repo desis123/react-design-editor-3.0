@@ -23,6 +23,8 @@ function useDesignEditorContext() {
     toggleFullScreen,
     designEditorLoading,
     setDesignEditorLoading,
+    displayResize,
+    setDisplayResize,
   } = useContext(DesignEditorContext)
   return {
     editorType,
@@ -45,6 +47,8 @@ function useDesignEditorContext() {
     toggleFullScreen,
     designEditorLoading,
     setDesignEditorLoading,
+    displayResize,
+    setDisplayResize,
   }
 }
 
