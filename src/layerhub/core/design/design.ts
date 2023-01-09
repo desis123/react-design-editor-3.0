@@ -2,7 +2,7 @@ import { IConfig, IDesign, IScene } from "@layerhub-pro/types"
 import { FabricCanvas, IState } from "../common/interfaces"
 import { Editor } from "../editor/editor"
 import Scene from "./scene"
-import { createScene } from "../utils/design"
+import { createFrame, createScene } from "../utils/design"
 import { nanoid } from "nanoid"
 import Resizer from "../resizer"
 
@@ -148,16 +148,40 @@ class Design {
   }
 
   public resize = async (options: { width: number; height: number }) => {
-    const currentIndex = this.scenes.findIndex((s) => s.id === this.activeScene.id)
-    const currentScene = this.activeScene.toJSON()
-    const resizer = new Resizer(currentScene, options, this.config)
-    const resized = await resizer.resize()
-    const resizedScene = await this.createScene({ ...resized })
+    const currentDesign = this.toJSON()
+    let resizedScenes: IScene[] = []
 
-    this.scenes.splice(currentIndex, 1, resizedScene)
-    this.updateContext()
-    this.setActiveScene(resizedScene)
+    for (const scene of currentDesign.scenes) {
+      const resizer = new Resizer(scene, options, this.config)
+      const resized = await resizer.resize()
+      resizedScenes = resizedScenes.concat(resized)
+    }
+    const frame = createFrame({
+      frame: {
+        width: options.width,
+        height: options.height,
+      },
+    })
+    const newDesign: IDesign = {
+      ...currentDesign,
+      frame: frame,
+      scenes: resizedScenes,
+    }
+
+    await this.setDesign(newDesign)
   }
+
+  // public resize = async (options: { width: number; height: number }) => {
+  //   const currentIndex = this.scenes.findIndex((s) => s.id === this.activeScene.id)
+  //   const currentScene = this.activeScene.toJSON()
+  //   const resizer = new Resizer(currentScene, options, this.config)
+  //   const resized = await resizer.resize()
+  //   const resizedScene = await this.createScene({ ...resized })
+
+  //   this.scenes.splice(currentIndex, 1, resizedScene)
+  //   this.updateContext()
+  //   this.setActiveScene(resizedScene)
+  // }
 }
 
 export default Design
