@@ -3578,7 +3578,7 @@ export const sampleFrames = [
   },
   {
     id: 6,
-    name: "Facebook Cover / Page Cover",
+    name: "Facebook Cover",
     width: 1702,
     height: 630,
     unit: "px",

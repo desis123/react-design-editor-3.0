@@ -4,7 +4,7 @@ import { IConfig, IFrame, ILayer, IScene } from "@layerhub-pro/types"
 import { LayerType } from "../common/constants"
 import { CanvasJSON, FabricCanvas, IState } from "../common/interfaces"
 import { type Editor } from "../editor/editor"
-import ObjectImporter from "./objects-importer"
+import ObjectImporter from "../utils/objects-importer"
 import Renderer from "../utils/renderer"
 import History from "./history"
 import ObjectExporter from "./objects-exporter"
@@ -14,6 +14,7 @@ import { getFitRatio } from "../utils/zoom"
 import { base64ImageToFile } from "../utils/parser"
 import Background from "./background"
 import getSelectionType from "../utils/get-selection-type"
+import Resizer from "../resizer"
 
 interface SceneOptions {
   scene: IScene
@@ -392,6 +393,7 @@ class Scene {
   //     this.history.save()
   //   }
   // }
+
   public getFitRatio = () => {
     return getFitRatio(this.frame, this.canvas, this.config)
   }

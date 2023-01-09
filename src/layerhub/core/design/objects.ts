@@ -1,6 +1,6 @@
 import { fabric } from "fabric"
 import type Scene from "./scene"
-import ObjectImporter from "./objects-importer"
+import ObjectImporter from "../utils/objects-importer"
 import { ILayer, ILayerOptions } from "@layerhub-pro/types"
 import { LayerType } from "../common/constants"
 import { nanoid } from "nanoid"
@@ -1240,7 +1240,7 @@ class Objects {
     const state = this.scene.state
     const objects = canvas.getObjects()
     const filteredObjects = objects.filter((o) => {
-      return o.type !== "Frame" && o.type !== "Background"
+      return o.type !== "BackgroundContainer"
     })
     state.setObjects(filteredObjects)
   }

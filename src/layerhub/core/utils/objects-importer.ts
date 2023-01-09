@@ -13,9 +13,9 @@ import {
   IStaticVideo,
 } from "@layerhub-pro/types"
 import { defaultObjectOptions } from "../constants/defaults"
-import { updateObjectBounds, updateObjectLock, updateObjectShadow } from "../utils/fabric"
-import { loadImageFromURL } from "../utils/image-loader"
-import { createVideoElement } from "../utils/video-loader"
+import { updateObjectBounds, updateObjectLock, updateObjectShadow } from "./fabric"
+import { loadImageFromURL } from "./image-loader"
+import { createVideoElement } from "./video-loader"
 
 interface ImportOptions {
   item: ILayer

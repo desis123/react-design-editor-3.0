@@ -1,9 +1,10 @@
-import { IConfig, IDesign } from "@layerhub-pro/types"
+import { IConfig, IDesign, IScene } from "@layerhub-pro/types"
 import { FabricCanvas, IState } from "../common/interfaces"
 import { Editor } from "../editor/editor"
 import Scene from "./scene"
 import { createScene } from "../utils/design"
 import { nanoid } from "nanoid"
+import Resizer from "../resizer"
 
 interface DesignOptions {
   canvas: FabricCanvas
@@ -108,10 +109,11 @@ class Design {
     this.setActiveScene(scene)
   }
 
-  public async createScene() {
-    const emptyScene = createScene({ frame: this.design.frame })
+  public async createScene(sceneData?: IScene) {
+    const frame = sceneData && sceneData.frame ? sceneData.frame : this.design.frame
+    const emptyScene = createScene({ frame: frame })
     const scene = new Scene({
-      scene: emptyScene,
+      scene: sceneData ? sceneData : emptyScene,
       canvas: this.canvas,
       config: this.config,
       editor: this.editor,
@@ -143,6 +145,18 @@ class Design {
 
   public updateContext() {
     this.state.setScenes([...this.scenes])
+  }
+
+  public resize = async (options: { width: number; height: number }) => {
+    const currentIndex = this.scenes.findIndex((s) => s.id === this.activeScene.id)
+    const currentScene = this.activeScene.toJSON()
+    const resizer = new Resizer(currentScene, options, this.config)
+    const resized = await resizer.resize()
+    const resizedScene = await this.createScene({ ...resized })
+
+    this.scenes.splice(currentIndex, 1, resizedScene)
+    this.updateContext()
+    this.setActiveScene(resizedScene)
   }
 }
 

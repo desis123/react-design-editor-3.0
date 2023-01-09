@@ -8,7 +8,7 @@ import { Input } from "baseui/input"
 import Scrollable from "~/components/Scrollable"
 import { sampleFrames } from "~/constants/editor"
 import useDesignEditorContext from "~/hooks/useDesignEditorContext"
-import { useObjects } from "~/layerhub"
+import { useActiveScene, useDesign, useObjects } from "@layerhub-pro/react"
 
 const Resize = () => {
   const { displayResize } = useDesignEditorContext()
@@ -18,11 +18,11 @@ const Resize = () => {
 
 const ResizeModal = () => {
   const { displayResize: isOpen, setDisplayResize: setIsOpen } = useDesignEditorContext()
-
+  const activeScene = useActiveScene()
   const [frame, setFrame] = React.useState<any>()
   const objects = useObjects() as any[]
   const [activeKey, setActiveKey] = React.useState<string | number>("0")
-
+  const design = useDesign()
   const [desiredFrame, setDesiredFrame] = React.useState({
     width: 0,
     height: 0,
@@ -45,15 +45,21 @@ const ResizeModal = () => {
 
   React.useEffect(() => {
     const frame = objects.find((o) => o.type === "Frame")
-    console.log({ frame, objects })
     if (frame) {
       setFrame(frame)
     }
   }, [objects])
 
-  const applyResize = () => {
+  const applyResize = React.useCallback(async () => {
     // @ts-ignore
     const size = activeKey === "0" ? selectedFrame : desiredFrame
+    if (design) {
+      await design.resize({
+        width: size.width,
+        height: size.height,
+      })
+      // activeScene
+    }
     // if (editor) {
     //   editor.frame.resize({
     //     width: parseInt(size.width),
@@ -68,7 +74,7 @@ const ResizeModal = () => {
     //   })
     // }
     setIsOpen(false)
-  }
+  }, [design, selectedFrame, desiredFrame])
   const isEnabled =
     // @ts-ignore
     (activeKey === "0" && selectedFrame.id !== 0) ||
@@ -97,7 +103,7 @@ const ResizeModal = () => {
           },
         }}
       >
-        <Block $style={{ padding: "0 1.5rem", width: "640px" }}>
+        <Block $style={{ padding: "0 1.5rem", width: "440px" }}>
           <Block
             $style={{
               padding: "2rem 1rem 1rem",
@@ -115,12 +121,19 @@ const ResizeModal = () => {
                   paddingRight: 0,
                 },
               },
+              Tab: {
+                style: {
+                  flex: 1,
+                  textAlign: "center",
+                },
+              },
               TabBar: {
                 style: {
-                  alignItems: "center",
-                  display: "flex",
-                  justifyContent: "center",
-                  backgroundColor: "#ffffff",
+                  flex: 1,
+                  // alignItems: "center",
+                  // display: "flex",
+                  // justifyContent: "center",
+                  // backgroundColor: "#ffffff",
                 },
               },
             }}
@@ -132,7 +145,7 @@ const ResizeModal = () => {
             <Tab title="Preset size">
               <Block $style={{ width: "100%", height: "400px", display: "flex" }}>
                 <Scrollable>
-                  <Block $style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr" }}>
+                  <Block $style={{ display: "grid" }}>
                     {sampleFrames.map((sampleFrame, index) => (
                       <Block
                         onClick={() => setSelectedFrame(sampleFrame)}
@@ -146,17 +159,7 @@ const ResizeModal = () => {
                         }}
                         key={index}
                       >
-                        <Block
-                          $style={{
-                            height: "120px",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                          }}
-                        >
-                          <img src={sampleFrame.preview} />
-                        </Block>
-                        <Block $style={{ fontSize: "13px", textAlign: "center" }}>
+                        <Block $style={{ fontSize: "13px" }}>
                           <Block $style={{ fontWeight: 500 }}>{sampleFrame.name}</Block>
                           <Block $style={{ color: "rgb(119,119,119)" }}>
                             {sampleFrame.width} x {sampleFrame.height}px
@@ -203,8 +206,21 @@ const ResizeModal = () => {
             </Tab>
           </Tabs>
         </Block>
-        <Block $style={{ display: "flex", alignItems: "center", justifyContent: "center", paddingBottom: "2rem" }}>
-          <Button disabled={!isEnabled} onClick={applyResize} style={{ width: "190px" }}>
+        <Block
+          $style={{
+            display: "grid",
+            alignItems: "center",
+            justifyContent: "center",
+            paddingBottom: "2rem",
+            gridTemplateColumns: "1fr 1fr",
+            gap: "1rem",
+            padding: "1rem",
+          }}
+        >
+          <Button kind="secondary" size="compact" onClick={() => setIsOpen(false)}>
+            Cancel
+          </Button>
+          <Button size="compact" disabled={!isEnabled} onClick={applyResize}>
             Resize template
           </Button>
         </Block>
