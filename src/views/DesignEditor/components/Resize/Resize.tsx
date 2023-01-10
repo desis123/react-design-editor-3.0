@@ -8,7 +8,7 @@ import { Input } from "baseui/input"
 import Scrollable from "~/components/Scrollable"
 import { sampleFrames } from "~/constants/editor"
 import useDesignEditorContext from "~/hooks/useDesignEditorContext"
-import { useActiveScene, useDesign, useObjects } from "@layerhub-pro/react"
+import { useDesign, useObjects } from "@layerhub-pro/react"
 
 const Resize = () => {
   const { displayResize } = useDesignEditorContext()
@@ -18,7 +18,6 @@ const Resize = () => {
 
 const ResizeModal = () => {
   const { displayResize: isOpen, setDisplayResize: setIsOpen } = useDesignEditorContext()
-  const activeScene = useActiveScene()
   const [frame, setFrame] = React.useState<any>()
   const objects = useObjects() as any[]
   const [activeKey, setActiveKey] = React.useState<string | number>("0")
@@ -32,7 +31,6 @@ const ResizeModal = () => {
     width: 0,
     height: 0,
   })
-  // const frame = useFrame()
 
   React.useEffect(() => {
     if (frame) {
@@ -55,24 +53,11 @@ const ResizeModal = () => {
     const size = activeKey === "0" ? selectedFrame : desiredFrame
     if (design) {
       await design.resize({
-        width: size.width,
-        height: size.height,
+        width: parseInt(size.width),
+        height: parseInt(size.height),
       })
-      // activeScene
     }
-    // if (editor) {
-    //   editor.frame.resize({
-    //     width: parseInt(size.width),
-    //     height: parseInt(size.height),
-    //   })
-    //   setCurrentDesign({
-    //     ...currentDesign,
-    //     frame: {
-    //       width: parseInt(size.width),
-    //       height: parseInt(size.height),
-    //     },
-    //   })
-    // }
+
     setIsOpen(false)
   }, [design, selectedFrame, desiredFrame])
   const isEnabled =
