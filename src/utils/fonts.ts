@@ -10,7 +10,7 @@ const getFontsFromObjects = (objects: Partial<ILayer>[]) => {
         url: (object as Required<IStaticText>).fontURL,
       })
     }
-    if (object.type === "Group") {
+    if (object.type === "Group" || object.type === "group") {
       // @ts-ignore
       let groupFonts = getFontsFromObjects(object.objects)
 
