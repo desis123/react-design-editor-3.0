@@ -9,6 +9,7 @@ class Config implements IConfig {
   public shortcuts: boolean
   public properties: string[]
   public frame: IFrame
+  public guidelines: { enabled: boolean; color: string }
   public background: {
     color: string
     shadow: fabric.IShadowOptions
@@ -23,6 +24,7 @@ class Config implements IConfig {
     })
     // @ts-ignore
     this.canvas = Object.assign({}, defaultConfig.canvas, options?.canvas)
+    this.guidelines = Object.assign({}, defaultConfig.guidelines, options?.guidelines)
   }
 }
 export default Config

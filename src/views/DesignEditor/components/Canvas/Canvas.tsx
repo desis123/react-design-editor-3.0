@@ -36,6 +36,10 @@ export default function () {
         config={{
           margin: 140,
           outsideVisible: false,
+          guidelines: {
+            enabled: true,
+            color: "",
+          },
         }}
       />
     </div>

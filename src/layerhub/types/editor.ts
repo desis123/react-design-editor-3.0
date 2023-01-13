@@ -4,6 +4,10 @@ import { IFrame, IScene } from "./scene"
 export interface IConfig {
   id: string
   outsideVisible: boolean
+  guidelines: {
+    enabled: boolean
+    color: string
+  }
   margin: number
   shortcuts: boolean
   properties: string[]

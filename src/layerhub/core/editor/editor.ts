@@ -11,6 +11,7 @@ import { createDesign } from "../utils/design"
 import CanvasEvents from "./canvas-events"
 import Drawer from "./drawer"
 import FreeDrawer from "./free-drawer"
+import Guidelines from "./guidelines"
 
 const ZERO = 0
 
@@ -30,6 +31,7 @@ export class Editor extends EventManager {
   public freeDrawer: FreeDrawer
   private config: Config
   private events: CanvasEvents
+  private guidelines: Guidelines
   constructor({ id, state, config }: Options) {
     super()
     this.state = state ? state : new State()
@@ -78,6 +80,10 @@ export class Editor extends EventManager {
         canvas: this.canvas.canvas,
         design: this.design,
         editor: this,
+      })
+      this.guidelines = new Guidelines({
+        canvas: this.canvas.canvas,
+        config: this.config,
       })
       this.zoom.zoomToFit(fitRatio)
       this.state.setDesign(this.design)

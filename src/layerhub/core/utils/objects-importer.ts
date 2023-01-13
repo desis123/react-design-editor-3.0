@@ -7,7 +7,6 @@ import {
   ILayer,
   IStaticAudio,
   IStaticImage,
-  IStaticPath,
   IStaticText,
   IStaticVector,
   IStaticVideo,
@@ -16,7 +15,6 @@ import { defaultObjectOptions } from "../constants/defaults"
 import { loadObject, updateObjectBounds, updateObjectLock, updateObjectShadow } from "./fabric"
 import { loadImageFromURL } from "./image-loader"
 import { createVideoElement } from "./video-loader"
-import { isObject } from "lodash"
 
 interface ImportOptions {
   item: ILayer
