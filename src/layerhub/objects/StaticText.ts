@@ -1,7 +1,7 @@
 import { fabric } from "fabric"
 import { groupBy, uniqueId, pick } from "lodash"
 
-const REGEX_VAR = new RegExp(/\`[\s*a-zA-Z0-9-_]+?\`/g)
+const REGEX_VAR = new RegExp(/\`[\s*a-zA-Z0-9-_.@$]+?\`/g)
 
 interface Param {
   id: string
