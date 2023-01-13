@@ -6,7 +6,11 @@ import ObjectsExporter from "../design/objects-exporter"
 
 class Resizer {
   private canvas: fabric.Canvas
-  constructor(public scene: IScene, public options: { width: number; height: number }, public config: IConfig) {}
+  constructor(
+    public scene: IScene,
+    public options: { width: number; height: number },
+    public config: IConfig
+  ) {}
 
   public async resize() {
     this.initCanvas()

@@ -238,7 +238,10 @@ class CanvasEvents {
     } else {
       zoomRatio += 0.02
     }
-    this.editor.zoom.zoomToPoint(new fabric.Point(this.canvas.getWidth() / 2, this.canvas.getHeight() / 2), zoomRatio)
+    this.editor.zoom.zoomToPoint(
+      new fabric.Point(this.canvas.getWidth() / 2, this.canvas.getHeight() / 2),
+      zoomRatio
+    )
     event.e.preventDefault()
     event.e.stopPropagation()
   }

@@ -13,9 +13,10 @@ import {
   IStaticVideo,
 } from "@layerhub-pro/types"
 import { defaultObjectOptions } from "../constants/defaults"
-import { updateObjectBounds, updateObjectLock, updateObjectShadow } from "./fabric"
+import { loadObject, updateObjectBounds, updateObjectLock, updateObjectShadow } from "./fabric"
 import { loadImageFromURL } from "./image-loader"
 import { createVideoElement } from "./video-loader"
+import { isObject } from "lodash"
 
 interface ImportOptions {
   item: ILayer
@@ -358,19 +359,12 @@ class ObjectImporter {
       try {
         const { item, options } = props
         const baseOptions = this.getBaseOptions(props)
-        const { path, fill } = item as IStaticPath
-
-        const element = new fabric.StaticPath({
-          ...baseOptions,
-          // @ts-ignore
-          path,
-          fill,
-        })
-
+        const element = await loadObject({ ...item, ...baseOptions })
         updateObjectBounds(element, options)
         updateObjectLock(element, props.item)
         updateObjectShadow(element, item.shadow)
-
+        // @ts-ignore
+        element.setCoords()
         resolve(element)
       } catch (err) {
         reject(err)

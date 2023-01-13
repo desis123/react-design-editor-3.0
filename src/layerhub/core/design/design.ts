@@ -2,7 +2,7 @@ import { IConfig, IDesign, IScene } from "@layerhub-pro/types"
 import { FabricCanvas, IState } from "../common/interfaces"
 import { Editor } from "../editor/editor"
 import Scene from "./scene"
-import { createFrame, createScene } from "../utils/design"
+import { createFrame, createScene, fixDesignFrame } from "../utils/design"
 import { nanoid } from "nanoid"
 import Resizer from "../resizer"
 
@@ -36,10 +36,11 @@ class Design {
   }
 
   public async setDesign(design: IDesign) {
-    this.design = design
-    this.template = design
+    const fixedDesign = fixDesignFrame(design)
+    this.design = fixedDesign
+    this.template = fixedDesign
     await this.loadScenes()
-    this.state.setTemplate(design)
+    this.state.setTemplate(fixedDesign)
   }
 
   public async loadScenes() {
@@ -82,6 +83,10 @@ class Design {
       this.activeScene = scene
       this.state.setActiveScene(scene)
     }
+    // Adding fallback rendering
+    setTimeout(() => {
+      this.canvas.requestRenderAll()
+    }, 0)
   }
 
   public async addScene() {

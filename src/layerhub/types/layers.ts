@@ -132,6 +132,7 @@ export interface IGroup extends LayerBaseOptions {
 }
 
 export interface IStaticPath extends LayerBaseOptions {
+  patternSource?: string
   path: number[][]
 }
 

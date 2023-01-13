@@ -1,4 +1,4 @@
-import { IFrame } from "@layerhub-pro/types"
+import { IDesign, IFrame } from "@layerhub-pro/types"
 import { nanoid } from "nanoid"
 import { defaultObjects } from "../constants/defaults"
 
@@ -33,4 +33,18 @@ export const createBackground = (options: { frame: IFrame }) => {
 export const createFrame = (options: { frame?: Partial<IFrame> }) => {
   const initial = { ...defaultObjects["FRAME"] }
   return Object.assign({}, initial, options.frame)
+}
+
+export const fixDesignFrame = (design: IDesign): IDesign => {
+  const frame = design.frame
+  const updatedScenes = design.scenes.map((scene) => {
+    return {
+      ...scene,
+      frame: scene.frame ? scene.frame : frame,
+    }
+  })
+  return {
+    ...design,
+    scenes: updatedScenes,
+  }
 }

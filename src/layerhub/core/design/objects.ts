@@ -57,10 +57,8 @@ class Objects {
         lockMovementX: false,
         hasBorders: true,
       })
-      // this.
       if (currentBackgrounImage) {
-        canvas.add(currentBackgrounImage)
-        this.sendToBack(currentBackgrounImage.id)
+        canvas.remove(currentBackgrounImage)
       }
     } else {
       canvas.add(object)
@@ -241,7 +239,11 @@ class Objects {
         source: patternSourceCanvas.getElement(),
         repeat: "repeat",
       })
-      path.set("fill", pattern)
+      path.set({
+        fill: pattern,
+        // @ts-ignore
+        patternSource: src,
+      })
       canvas.requestRenderAll()
       this.scene.history.save()
     }
@@ -372,10 +374,7 @@ class Objects {
 
     if (refObject && refObject.type === LayerType.STATIC_IMAGE) {
       let nextImage = await this.partialUnsetBackgroundImage()
-      if (nextImage) {
-        // @ts-ignore
-        canvas.add(nextImage)
-      }
+
       const objectJSON = refObject.toJSON(this.scene.config.properties)
 
       delete objectJSON.clipPath
@@ -394,8 +393,11 @@ class Objects {
       this.scaleBackground(backgroundImage)
       backgroundImage.moveTo(3)
       if (nextImage) {
-        this.sendToBack(nextImage.id)
+        // @ts-ignore
+        canvas.remove(nextImage)
       }
+      this.updateContextObjects()
+      this.scene.history.save()
     }
   }
 
@@ -611,6 +613,7 @@ class Objects {
         })
       }
       canvas.requestRenderAll()
+      this.scene.history.save()
     }
   }
   /**
@@ -651,6 +654,7 @@ class Objects {
         })
       }
       canvas.requestRenderAll()
+      this.scene.history.save()
     }
   }
 
@@ -692,6 +696,7 @@ class Objects {
         })
       }
       canvas.requestRenderAll()
+      this.scene.history.save()
     }
   }
 
@@ -730,6 +735,7 @@ class Objects {
         })
       }
       canvas.requestRenderAll()
+      this.scene.history.save()
     }
   }
 
@@ -771,6 +777,7 @@ class Objects {
         })
       }
       canvas.requestRenderAll()
+      this.scene.history.save()
     }
   }
 
@@ -811,6 +818,7 @@ class Objects {
         })
       }
       canvas.requestRenderAll()
+      this.scene.history.save()
     }
   }
 
@@ -826,6 +834,7 @@ class Objects {
         }) as fabric.Object
         canvas.setActiveObject(selection)
         canvas.requestRenderAll()
+        this.scene.history.save()
       })
     }
   }
@@ -839,6 +848,7 @@ class Objects {
     this.duplicate(object, frame, (duplicates) => {
       canvas.requestRenderAll()
       this.updateContextObjects()
+      this.scene.history.save()
     })
   }
 
@@ -907,6 +917,7 @@ class Objects {
     this.copy()
     this.isCut = true
     this.remove()
+    this.scene.history.save()
   }
 
   public copy = (id?: string) => {
@@ -965,6 +976,7 @@ class Objects {
         canvas.requestRenderAll()
 
         this.updateContextObjects()
+        this.scene.history.save()
       })
     }
   }
@@ -1096,6 +1108,7 @@ class Objects {
     }
     if (refObject) {
       canvas.bringForward(refObject)
+      this.scene.history.save()
     }
   }
 
@@ -1111,6 +1124,7 @@ class Objects {
     }
     if (refObject) {
       canvas.bringToFront(refObject)
+      this.scene.history.save()
     }
   }
 
@@ -1128,6 +1142,7 @@ class Objects {
     const canBeMoved = index > 3
     if (refObject && canBeMoved) {
       canvas.sendBackwards(refObject)
+      this.scene.history.save()
     }
   }
 
@@ -1142,6 +1157,7 @@ class Objects {
     }
     if (refObject) {
       refObject.moveTo(3)
+      this.scene.history.save()
     }
   }
 

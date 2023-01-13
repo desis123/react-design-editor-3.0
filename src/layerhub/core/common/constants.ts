@@ -18,6 +18,7 @@ export const PROPERTIES_TO_INCLUDE = [
   "rx",
   "ry",
   "locked",
+  "patternSource",
 ]
 
 export const defaultFrameOptions = {

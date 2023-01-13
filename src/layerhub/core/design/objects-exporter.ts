@@ -227,12 +227,13 @@ class ObjectsExporter {
 
   public staticPath(item: ILayer, options: Required<ILayer>, inGroup: boolean): IStaticPath {
     const baseOptions = this.getBaseOptions(item, options, inGroup)
-    const { path, fill, metadata } = item as IStaticPath
+    const { path, fill, metadata, patternSource } = item as IStaticPath
     const object = {
       ...baseOptions,
       path,
       fill,
       metadata,
+      patternSource,
     }
 
     return object

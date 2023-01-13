@@ -274,7 +274,10 @@ export class StaticImageObject extends fabric.Image {
 
     canvas.remove(cropped)
 
-    const np = rotatedPoint({ x: cropper.left, y: cropper.top }, -cropper.angle, { x: cropped.left, y: cropped.top })
+    const np = rotatedPoint({ x: cropper.left, y: cropper.top }, -cropper.angle, {
+      x: cropped.left,
+      y: cropped.top,
+    })
 
     const cropInfo = {
       top: (np.y - cropped.top) / sY,

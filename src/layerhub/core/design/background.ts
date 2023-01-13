@@ -26,6 +26,7 @@ class Background {
     }
     this.scene.canvas.requestRenderAll()
     this.scene.history.save()
+    this.scene.objects.updateContextObjects()
   }
 
   public updateCurrentBackground = async (options: Partial<ILayer>) => {
